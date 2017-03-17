@@ -9,6 +9,6 @@ public class ProbIA5GoalTest implements GoalTest {
 
     public boolean isGoalState(Object state){
 
-        return((ProbIA5Board) state).is_goal();
+        return((IAState) state).is_goal();
     }
 }

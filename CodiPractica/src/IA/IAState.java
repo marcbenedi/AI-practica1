@@ -3,7 +3,7 @@ package IA;
 /**
  * Created by bejar on 17/01/17.
  */
-public class ProbIA5Board {
+public class IAState {
     /* Class independent from AIMA classes
        - It has to implement the state of the problem and its operators
      *
@@ -16,7 +16,7 @@ public class ProbIA5Board {
     private static int [] solution;
 
     /* Constructor */
-    public ProbIA5Board(int []init, int[] goal) {
+    public IAState(int []init, int[] goal) {
 
         board = new int[init.length];
         solution = new int[init.length];
