@@ -19,12 +19,9 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-              <folding>
-                <element signature="e#109#110#0" expanded="true" />
-                <element signature="e#151#152#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="225">
+              <caret line="15" column="28" lean-forward="false" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -46,11 +43,11 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/IA/ProbIA5Board.java" />
         <option value="$PROJECT_DIR$/src/IA/ProbIA5GoalTest.java" />
         <option value="$PROJECT_DIR$/src/IA/ProbIA5HeuristicFunction.java" />
         <option value="$PROJECT_DIR$/src/IA/ProbIA5SuccesorFunction.java" />
+        <option value="$PROJECT_DIR$/src/Main.java" />
       </list>
     </option>
   </component>
@@ -581,12 +578,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1489761890312</updated>
-      <workItem from="1489761894198" duration="394000" />
+      <workItem from="1489761894198" duration="551000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="394000" />
+    <option name="totallyTimeSpent" value="551000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="55" y="-744" width="1311" height="744" extended-state="6" />
@@ -672,12 +669,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding>
-            <element signature="e#109#110#0" expanded="true" />
-            <element signature="e#151#152#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="225">
+          <caret line="15" column="28" lean-forward="false" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
+          <folding />
         </state>
       </provider>
     </entry>
