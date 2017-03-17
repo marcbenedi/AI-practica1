@@ -1,54 +1,75 @@
 package IA;
 
-/**
- * Created by bejar on 17/01/17.
- */
+
+import IA.Red.CentrosDatos;
+import IA.Red.Sensores;
+
+import java.util.ArrayList;
+
 public class IAState {
-    /* Class independent from AIMA classes
-       - It has to implement the state of the problem and its operators
-     *
 
-    /* State data structure
-        vector with the parity of the coins (we can assume 0 = heads, 1 = tails
-     */
+    private static CentrosDatos centers;
+    private static Sensores sensors;
 
-    private int [] board;
-    private static int [] solution;
+    private static final int numCenters = 4;
+    private static final int numSensors = 150;
+    private static final int seed = 1234;
+    private static final int maxFlowCenter = 125;
+
+    // - -> DataCenter (C)
+    // + -> Sensors    (S)
+    // -C <= value <= S-1
+    // Mida S
+    private int[] connectedTo;
+
+    //Mida S + C
+    private int[] inputConnections;
+    //Mida S + C
+    private int[] inputFlow;
+    //Mida S + C
+    private int[] maxFlow;
+
 
     /* Constructor */
-    public IAState(int []init, int[] goal) {
+    public IAState() {
 
-        board = new int[init.length];
-        solution = new int[init.length];
+        //Create the CentroDatos ArrayList with a random seed.
+        centers = new CentrosDatos(numCenters,seed);
 
-        for (int i = 0; i< init.length; i++) {
-            board[i] = init[i];
-            solution[i] = goal[i];
+        //Create the Sensores ArrayList with a random seed.
+        sensors = new Sensores(numSensors, seed);
+
+        connectedTo = new int[numSensors];
+        inputConnections = new int[numSensors+numCenters];
+        inputFlow = new int[numSensors+numCenters];
+        maxFlow = new int[numSensors+numCenters];
+
+        for (int i = 0; i < numCenters; ++i){
+            maxFlow[i] = maxFlowCenter;
+            inputConnections[i] = 0;
+            inputFlow[i] = 0;
         }
 
+        for (int i = numCenters; i < numSensors; ++i){
+            maxFlow[i] = (int) sensors.get(i-numCenters).getCapacidad();
+            connectedTo[i-numCenters] = 0;
+            inputConnections[i] = 0;
+            inputFlow[i] = 0;
+        }
+
+        //generarSolucioInicial();
+
     }
 
-    /* vvvvv TO COMPLETE vvvvv */
-    public void flip_it(int i){
-        // flip the coins i and i + 1
-    }
-
-    /* Heuristic function */
     public double heuristic(){
         // compute the number of coins out of place respect to solution
         return 0;
     }
 
-     /* Goal test */
      public boolean is_goal(){
          // compute if board = solution
          return false;
      }
 
-     /* auxiliary functions */
-
-     // Some functions will be needed for creating a copy of the state
-
-    /* ^^^^^ TO COMPLETE ^^^^^ */
 
 }
