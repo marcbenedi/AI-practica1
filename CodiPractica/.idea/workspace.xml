@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a7819408-29c5-48d7-aee2-4377227b899d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState$DistanceComparator.class" afterPath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState$DistanceComparator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState$SensorComparator.class" afterPath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState$SensorComparator.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState$Triplet.class" afterPath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState$Triplet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState.class" afterPath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/IA/IAState.java" afterPath="$PROJECT_DIR$/src/IA/IAState.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -47,8 +42,8 @@
       <file leaf-file-name="IAState.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/IA/IAState.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="452">
-              <caret line="129" column="110" lean-forward="false" selection-start-line="129" selection-start-column="110" selection-end-line="129" selection-end-column="110" />
+            <state relative-caret-position="632">
+              <caret line="252" column="9" lean-forward="true" selection-start-line="252" selection-start-column="9" selection-end-line="252" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -127,8 +122,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="55" />
     <option name="y" value="24" />
-    <option name="width" value="1311" />
-    <option name="height" value="744" />
+    <option name="width" value="1865" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -677,12 +672,12 @@
       <workItem from="1489784444983" duration="616000" />
       <workItem from="1489914953329" duration="10090000" />
       <workItem from="1489938378415" duration="4768000" />
-      <workItem from="1489943274384" duration="1823000" />
+      <workItem from="1489943274384" duration="3114000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="22040000" />
+    <option name="totallyTimeSpent" value="23331000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -694,7 +689,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="55" y="24" width="1311" height="744" extended-state="6" />
+    <frame x="55" y="24" width="1865" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -711,7 +706,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17467582" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.122788206" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32917318" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -952,8 +947,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/IA/IAState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="452">
-          <caret line="129" column="110" lean-forward="false" selection-start-line="129" selection-start-column="110" selection-end-line="129" selection-end-column="110" />
+        <state relative-caret-position="632">
+          <caret line="252" column="9" lean-forward="true" selection-start-line="252" selection-start-column="9" selection-end-line="252" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

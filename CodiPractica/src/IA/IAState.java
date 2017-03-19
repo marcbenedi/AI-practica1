@@ -8,7 +8,6 @@ import IA.Red.Sensores;
 
 import java.util.*;
 
-import static java.lang.Math.min;
 import static java.lang.Math.sqrt;
 
 public class IAState {
