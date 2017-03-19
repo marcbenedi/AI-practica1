@@ -8,6 +8,7 @@ import IA.Red.Sensores;
 
 import java.util.*;
 
+import static java.lang.Math.min;
 import static java.lang.Math.sqrt;
 
 public class IAState {
@@ -27,12 +28,12 @@ public class IAState {
     *
     * When the value -numCenters-1< v <0 it represents
     * that the SENSOR (i) is connected to
-    * the CENTER in the position numCenters-v
+    * the CENTER in the position numCenters+v
     * in the DS centers
     *
     * When the value v>=0 it represents
     * that the SENSOR (i) is connected to
-    * the SENSOR in the position numCenters-v
+    * the SENSOR in the position v
     * in the DS sensors
     *
     * */
@@ -68,7 +69,7 @@ public class IAState {
     //Mida S + C
     private int[] inputFlow;
     //Mida S + C
-    private int[] maxFlow;
+    private int[] collectedDataVolume;
 
 
     /* Constructor */
@@ -83,16 +84,16 @@ public class IAState {
         connectedTo = new int[numSensors];
         inputConnections = new int[numSensors + numCenters];
         inputFlow = new int[numSensors + numCenters];
-        maxFlow = new int[numSensors + numCenters];
+        collectedDataVolume = new int[numSensors + numCenters];
 
         for (int i = 0; i < numCenters; ++i) {
-            maxFlow[i] = maxFlowCenter;
+            collectedDataVolume[i] = maxFlowCenter;
             inputConnections[i] = 0;
             inputFlow[i] = 0;
         }
 
         for (int i = numCenters; i < numSensors; ++i) {
-            maxFlow[i] = (int) sensors.get(i - numCenters).getCapacidad();
+            collectedDataVolume[i] = (int) sensors.get(i - numCenters).getCapacidad();
             connectedTo[i - numCenters] = -numCenters - 1;
             inputConnections[i] = 0;
             inputFlow[i] = 0;
@@ -117,13 +118,25 @@ public class IAState {
 
     private void updateFlow(Integer s, Double capacity) {
         // Base case, I am in a sensor.
-        //System.out.println(s);
         if (s >= 0) {
-            inputFlow[s + numCenters] += capacity;
-            updateFlow(connectedTo[s], capacity);
+
+            //We don't exceed our collectedDataVolume
+            if(2* collectedDataVolume[s+numCenters] >= inputFlow[s + numCenters] + capacity.intValue()){
+                inputFlow[s+numCenters] += capacity.intValue();
+                updateFlow(connectedTo[s], capacity);
+            }
+            else {
+                //We exceed our collectedDataVolume, we send our collectedDataVolume
+                updateFlow(connectedTo[s], (double) 2*collectedDataVolume[s+numCenters] - inputFlow[s+numCenters]);
+                inputFlow[s+numCenters] = 2*collectedDataVolume[s+numCenters];
+            }
+
+            //inputFlow[s + numCenters] = min(inputFlow[s + numCenters] + capacity.intValue(), (int) sensors.get(s).getCapacidad()*2);
+            //updateFlow(connectedTo[s], capacity);
         }
         // I am in a data center.
         else {
+            //TODO: Mirar limit del datacenter
             inputFlow[s + numCenters] += capacity;
         }
     }
