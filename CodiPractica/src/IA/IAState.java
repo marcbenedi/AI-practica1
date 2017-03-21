@@ -118,6 +118,8 @@ public class IAState {
         return false;
     }
 
+    //Updates the incoming flow of a sensor or a center. If the amount of flow is greater than my capacity, the extra
+    //flow is lost and I send my max output flow + my collected data value.
     private void updateFlow(Integer s, Double capacity) {
         // Base case, I am in a sensor.
         if (s >= 0) {
@@ -143,6 +145,8 @@ public class IAState {
         }
     }
 
+    //Returns the index of the nearest NOT connected sensor.
+    //If there are not any free sensors the return value is -1.
     private Integer findNearestNotConnectedSensor(Integer s) {
         double max = -1;
         int index_max = -1;
@@ -292,7 +296,7 @@ public class IAState {
         }
     }
 
-    //Compare two Sensors first by capacity and after by distance. 
+    //Compare two Sensors first by capacity and after by distance.
     public class SensorComparator implements Comparator<Integer> {
         private int ind_c;
 
