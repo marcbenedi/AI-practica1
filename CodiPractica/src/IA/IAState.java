@@ -55,6 +55,7 @@ public class IAState {
     private static final int maxFlowCenter = 125;
     private static final int inputMaxCenter = 25;
     private static final int inputMaxSensor = 3;
+    private static final int notConnected = -numCenters-1;
 
     // - -> DataCenter (C)
     // + -> Sensors    (S)
@@ -73,17 +74,19 @@ public class IAState {
     /* Constructor */
     public IAState() {
 
+        //Initializing the problem with IA.Red input
         //Create the CentroDatos ArrayList with a random seed.
         centers = new CentrosDatos(numCenters, seed);
-
         //Create the Sensores ArrayList with a random seed.
         sensors = new Sensores(numSensors, seed);
 
+        //Initializing the size of the arrays
         connectedTo = new int[numSensors];
         inputConnections = new int[numSensors + numCenters];
         inputFlow = new int[numSensors + numCenters];
         collectedDataVolume = new int[numSensors + numCenters];
 
+        //Initializing the value
         for (int i = 0; i < numCenters; ++i) {
             collectedDataVolume[i] = maxFlowCenter;
             inputConnections[i] = 0;
@@ -92,7 +95,7 @@ public class IAState {
 
         for (int i = numCenters; i < numSensors; ++i) {
             collectedDataVolume[i] = (int) sensors.get(i - numCenters).getCapacidad();
-            connectedTo[i - numCenters] = -numCenters - 1;
+            connectedTo[i - numCenters] = notConnected;
             inputConnections[i] = 0;
             inputFlow[i] = 0;
         }
@@ -143,7 +146,7 @@ public class IAState {
         double max = -1;
         int index_max = -1;
         for (int j = numCenters; j < numSensors + numCenters; ++j) {
-            if (max < distances[s][j] && connectedTo[j - numCenters] == -numCenters - 1) {
+            if (max < distances[s][j] && connectedTo[j - numCenters] == notConnected) {
                 max = distances[s][j];
                 index_max = j - numCenters;
             }
@@ -163,7 +166,7 @@ public class IAState {
             Integer s = volumeDistanceOrderedSensorsPerCenter.get(numCenters + index_c).poll();
             while (s != null && inputConnections[numCenters + index_c] < inputMaxCenter) {
                 //If it is not connected
-                if (connectedTo[s] == -numCenters - 1) {
+                if (connectedTo[s] == notConnected) {
                     connectedTo[s] = index_c;
                     this_level.add(s);
                     inputConnections[numCenters + index_c] += 1;
