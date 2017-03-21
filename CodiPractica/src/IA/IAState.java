@@ -123,6 +123,12 @@ public class IAState {
 
     }
 
+    //This method initializes all the static variables
+    public static void initClass(){
+        //TODO: Be sure that the static variables are initialized in the creator function
+        //Because if we do this in the creator object, we will be doing the same every time we apply some operator
+    }
+
     public double heuristic() {
         // compute the number of coins out of place respect to solution
         return 0;

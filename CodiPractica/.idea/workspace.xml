@@ -45,8 +45,8 @@
       <file leaf-file-name="IAState.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/IA/IAState.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1305">
-              <caret line="87" column="85" lean-forward="false" selection-start-line="87" selection-start-column="85" selection-end-line="87" selection-end-column="85" />
+            <state relative-caret-position="328">
+              <caret line="128" column="114" lean-forward="false" selection-start-line="128" selection-start-column="114" selection-end-line="128" selection-end-column="114" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -677,12 +677,12 @@
       <workItem from="1489938378415" duration="4768000" />
       <workItem from="1489943274384" duration="3114000" />
       <workItem from="1489956332106" duration="113000" />
-      <workItem from="1490107939812" duration="1732000" />
+      <workItem from="1490107939812" duration="1910000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25176000" />
+    <option name="totallyTimeSpent" value="25354000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -994,8 +994,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/IA/IAState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1305">
-          <caret line="87" column="85" lean-forward="false" selection-start-line="87" selection-start-column="85" selection-end-line="87" selection-end-column="85" />
+        <state relative-caret-position="328">
+          <caret line="128" column="114" lean-forward="false" selection-start-line="128" selection-start-column="114" selection-end-line="128" selection-end-column="114" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
