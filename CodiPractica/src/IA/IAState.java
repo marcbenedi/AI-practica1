@@ -44,6 +44,7 @@ public class IAState {
 
     //Index from 0 to numCenter-1
     //Integer goes from 0 to numSensors-1
+    //Ordered by ascending distance
     private static ArrayList<PriorityQueue<Integer>> volumeDistanceOrderedSensorsPerCenter;
 
     //Distance matrix. Rows = numSensors, Columns = numCenter + numSensors. (The first columns reference centers)
@@ -85,6 +86,7 @@ public class IAState {
         inputConnections = new int[numSensors + numCenters];
         inputFlow = new int[numSensors + numCenters];
         collectedDataVolume = new int[numSensors + numCenters];
+        distances = new double[numSensors][numCenters + numSensors];
 
         //Initializing the value
         for (int i = 0; i < numCenters; ++i) {
@@ -100,7 +102,6 @@ public class IAState {
             inputFlow[i] = 0;
         }
 
-        distances = new double[numSensors][numCenters + numSensors];
         calculateDistanceMatrix();
         //Generate the initial solution 1
         generarSolucioInicial1();
@@ -201,6 +202,9 @@ public class IAState {
         }
     }
 
+    //Fills up the distance matrix. distance[i][j] is the distance between the sensor i and the center/sensor j.
+    //0 <= j < numCenters : Centers
+    //numCenters <= j < numCenters + numSensors : Sensor (But sensors[j-numCenters]).
     private void calculateDistanceMatrix() {
         for (int i = 0; i < numSensors; ++i) {
             for (int j = 0; j < numCenters + numSensors; ++j) {
@@ -212,6 +216,7 @@ public class IAState {
         }
     }
 
+    //For each center, this function calculates its distance between it and all the sensors.
     private void calculateQueuePerCenter() {
         volumeDistanceOrderedSensorsPerCenter = new ArrayList<>();
         int index_center = 0;
@@ -224,14 +229,17 @@ public class IAState {
         }
     }
 
+    //Calculate the distance between two sensors
     private double calculateDistance(Sensor s1, Sensor s2) {
         return sqrt((s1.getCoordX() - s2.getCoordX()) ^ 2 + (s1.getCoordY() - s2.getCoordY()) ^ 2);
     }
 
+    //Calculate the distance between one sensor and one center
     private double calculateDistance(Sensor s, Centro c) {
         return sqrt((s.getCoordX() - c.getCoordX()) ^ 2 + (s.getCoordY() - c.getCoordY()) ^ 2);
     }
 
+    //TODO: Are we using it? Or can we delete it?
     private class Triplet {
         private int sensor_id;
         private int sensor2_id;
@@ -274,6 +282,7 @@ public class IAState {
         }
     }
 
+    //TODO: Are we using it? Or can we delete it?
     public class DistanceComparator implements Comparator<Triplet> {
         @Override
         public int compare(Triplet triplet, Triplet t1) {
@@ -283,6 +292,7 @@ public class IAState {
         }
     }
 
+    //Compare two Sensors first by capacity and after by distance. 
     public class SensorComparator implements Comparator<Integer> {
         private int ind_c;
 

@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a7819408-29c5-48d7-aee2-4377227b899d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/IA/IAState.java" afterPath="$PROJECT_DIR$/src/IA/IAState.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.java" afterPath="$PROJECT_DIR$/src/Main.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,8 +45,8 @@
       <file leaf-file-name="IAState.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/IA/IAState.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="24" column="35" lean-forward="false" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="35" />
+            <state relative-caret-position="163">
+              <caret line="294" column="67" lean-forward="false" selection-start-line="294" selection-start-column="67" selection-end-line="294" selection-end-column="67" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -678,12 +677,12 @@
       <workItem from="1489938378415" duration="4768000" />
       <workItem from="1489943274384" duration="3114000" />
       <workItem from="1489956332106" duration="113000" />
-      <workItem from="1490107939812" duration="676000" />
+      <workItem from="1490107939812" duration="1210000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24120000" />
+    <option name="totallyTimeSpent" value="24654000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -995,8 +994,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/IA/IAState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="24" column="35" lean-forward="false" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="35" />
+        <state relative-caret-position="163">
+          <caret line="294" column="67" lean-forward="false" selection-start-line="294" selection-start-column="67" selection-end-line="294" selection-end-column="67" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
