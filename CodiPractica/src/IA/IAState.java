@@ -46,8 +46,7 @@ public class IAState {
     //Integer goes from 0 to numSensors-1
     private static ArrayList<PriorityQueue<Integer>> volumeDistanceOrderedSensorsPerCenter;
 
-    //matriu de distàncies de numSensors files i numSensors+numCenters columnes (les primeres columnes corresponen a centres)
-    //TODO: Passar a anglès
+    //Distance matrix. Rows = numSensors, Columns = numCenter + numSensors. (The first columns reference centers)
     private static double[][] distances;
 
     private static final int numCenters = 14;
@@ -60,14 +59,14 @@ public class IAState {
     // - -> DataCenter (C)
     // + -> Sensors    (S)
     // -C <= value <= S-1
-    // Mida S
+    // Size = S
     private int[] connectedTo;
 
-    //Mida S + C
+    // Size S + C
     private int[] inputConnections;
-    //Mida S + C
+    // Size S + C
     private int[] inputFlow;
-    //Mida S + C
+    //Size S + C
     private int[] collectedDataVolume;
 
 
@@ -99,7 +98,7 @@ public class IAState {
         }
 
         distances = new double[numSensors][numCenters + numSensors];
-        calcularMatriuDistancies();
+        calculateDistanceMatrix();
         //Generate the initial solution 1
         generarSolucioInicial1();
 
@@ -199,8 +198,7 @@ public class IAState {
         }
     }
 
-    //TODO: Canviar a angles
-    private void calcularMatriuDistancies() {
+    private void calculateDistanceMatrix() {
         for (int i = 0; i < numSensors; ++i) {
             for (int j = 0; j < numCenters + numSensors; ++j) {
                 if (j < numCenters)
@@ -301,7 +299,7 @@ public class IAState {
             if (s1.getCapacidad() < s2.getCapacidad()) return 1;
             else if (s1.getCapacidad() > s2.getCapacidad()) return -1;
             else {
-                //Accedir a la matriu de distancies i comparar distancia
+                //Go to distance matrix and compare the distance
                 if (distances[i1][ind_c] < distances[i2][ind_c]) return -1;
                 else return 1;
             }
