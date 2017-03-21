@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/IA/IAState.java" line="18" />
+    <bookmark url="file://$PROJECT_DIR$/src/IA/IAState.java" line="33" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a7819408-29c5-48d7-aee2-4377227b899d" name="Default" comment="">
@@ -45,8 +45,8 @@
       <file leaf-file-name="IAState.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/IA/IAState.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1153">
-              <caret line="121" column="75" lean-forward="false" selection-start-line="121" selection-start-column="75" selection-end-line="121" selection-end-column="75" />
+            <state relative-caret-position="1305">
+              <caret line="87" column="85" lean-forward="false" selection-start-line="87" selection-start-column="85" selection-end-line="87" selection-end-column="85" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -677,12 +677,12 @@
       <workItem from="1489938378415" duration="4768000" />
       <workItem from="1489943274384" duration="3114000" />
       <workItem from="1489956332106" duration="113000" />
-      <workItem from="1490107939812" duration="1394000" />
+      <workItem from="1490107939812" duration="1732000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24838000" />
+    <option name="totallyTimeSpent" value="25176000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -994,8 +994,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/IA/IAState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1153">
-          <caret line="121" column="75" lean-forward="false" selection-start-line="121" selection-start-column="75" selection-end-line="121" selection-end-column="75" />
+        <state relative-caret-position="1305">
+          <caret line="87" column="85" lean-forward="false" selection-start-line="87" selection-start-column="85" selection-end-line="87" selection-end-column="85" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

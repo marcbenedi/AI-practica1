@@ -12,6 +12,21 @@ import static java.lang.Math.sqrt;
 
 public class IAState {
 
+    //CONSTANTS (FINAL and also static) --------------------------------------------------------------------------------
+
+    private static final int numCenters = 14;
+    private static final int numSensors = 125;
+    private static final int seed = 1234;
+    private static final int maxFlowCenter = 125;
+    private static final int inputMaxCenter = 25;
+    private static final int inputMaxSensor = 3;
+    private static final int notConnected = -numCenters-1;
+    //------------------------------------------------------------------------------------------------------------------
+
+
+
+    //CLASS VARIABLES (STATIC)------------------------------------------------------------------------------------------
+
     /*
     * If numCenters = 4 and numSensors = 5
     * ---------------------------------------
@@ -49,14 +64,11 @@ public class IAState {
 
     //Distance matrix. Rows = numSensors, Columns = numCenter + numSensors. (The first columns reference centers)
     private static double[][] distances;
+    //------------------------------------------------------------------------------------------------------------------
 
-    private static final int numCenters = 14;
-    private static final int numSensors = 125;
-    private static final int seed = 1234;
-    private static final int maxFlowCenter = 125;
-    private static final int inputMaxCenter = 25;
-    private static final int inputMaxSensor = 3;
-    private static final int notConnected = -numCenters-1;
+
+
+    //INDIVIDUAL STATE VARIABLES----------------------------------------------------------------------------------------
 
     // - -> DataCenter (C)
     // + -> Sensors    (S)
@@ -70,7 +82,10 @@ public class IAState {
     private int[] inputFlow;
     //Size S + C
     private int[] collectedDataVolume;
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //TODO: Be sure that the static variables are initialized in the creator function
 
     /* Constructor */
     public IAState() {
