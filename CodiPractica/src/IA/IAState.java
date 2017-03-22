@@ -87,6 +87,16 @@ public class IAState {
 
     //TODO: Be sure that the static variables are initialized in the creator function
 
+
+
+    public static int getNumCenters() {
+        return numCenters;
+    }
+
+    public static int getNumSensors() {
+        return numSensors;
+    }
+
     /* Constructor */
     public IAState() {
 
@@ -121,6 +131,14 @@ public class IAState {
         //Generate the initial solution 1
         generarSolucioInicial1();
 
+    }
+
+    //Constructor por copia
+    public IAState(IAState state) {
+        this.connectedTo = state.connectedTo;
+        this.inputConnections = state.inputConnections;
+        this.inputFlow = state.inputFlow;
+        this.collectedDataVolume = state.collectedDataVolume;
     }
 
     //This method initializes all the static variables
@@ -298,7 +316,7 @@ public class IAState {
     //Returns a list with two lists containing
     // all the spots (sensors and data centers) that have availability for input connections.
 
-    public ArrayList getAllPosibleDestinations(int sensor_id) {
+    public ArrayList<ArrayList<Integer>> getAllPosibleDestinations(int sensor_id) {
         HashSet<Integer> dependant = dependingSensors(sensor_id);
         ArrayList<Integer> centersSpots = new ArrayList<>();
         for (int i = 0; i < numCenters; ++i) {
@@ -316,7 +334,7 @@ public class IAState {
                 }
             }
         }
-        ArrayList<ArrayList> result = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
         result.add(centersSpots);
         result.add(sensorsSpots);
         return result;
@@ -362,6 +380,36 @@ public class IAState {
         updateFlow(previousConnection, -sensorMovingOutputFlow);
     }
 
+    //_________________ 2: SWAP CONNECTIONS _____________________
+
+    //Returns all non-dependant pairs of sensors in a set of arraylist in which the first component is always
+    //the sensor with the lower id
+    public HashSet<ArrayList<Integer>> getAllNonDependantPairsOfSensors() {
+        ArrayList<ArrayList<Integer>> pairs = new ArrayList<>();
+        for (int i = 0; i < numSensors; ++i) {
+            HashSet<Integer> dependant = dependingSensors(i);
+            for (int j = 0; j < numSensors; ++j) {
+                if (!dependant.contains(j)) {
+                    if (i != j) {
+                        ArrayList<Integer> pair = new ArrayList<>();
+                        if (i < j) {
+                            pair.add(i);
+                            pair.add(j);
+                        }
+                        else {
+                            pair.add(j);
+                            pair.add(i);
+                        }
+                        pairs.add(pair);
+                    }
+                }
+            }
+        }
+        return new HashSet<ArrayList<Integer>>(pairs);
+    }
+
+
+    //Pre: sensors are non dependant
     public void swapConnections(int sensor_id_1, int sensor_id_2) {
         // 0.- Change both connectedTo
         // 1.- Update flow on both
