@@ -264,59 +264,6 @@ public class IAState {
         return sqrt((s.getCoordX() - c.getCoordX()) ^ 2 + (s.getCoordY() - c.getCoordY()) ^ 2);
     }
 
-    //TODO: Are we using it? Or can we delete it?
-    private class Triplet {
-        private int sensor_id;
-        private int sensor2_id;
-        private boolean sensor_to_sensor;
-        private int center_id;
-        private double distance;
-
-        public Triplet(int sid, int cid, double dist) {
-            sensor_id = sid;
-            center_id = cid;
-            distance = dist;
-            this.sensor_to_sensor = false;
-        }
-
-        public Triplet(int sid, int sid2, boolean sensor_to_sensor, double dist) {
-            sensor_id = sid;
-            sensor2_id = sid2;
-            distance = dist;
-            this.sensor_to_sensor = true;
-        }
-
-        public double getDistance() {
-            return distance;
-        }
-
-        public int getSensor_id() {
-            return sensor_id;
-        }
-
-        public int getCenter_id() {
-            return center_id;
-        }
-
-        public boolean getSensor_to_sensor() {
-            return sensor_to_sensor;
-        }
-
-        public int getSensor2_id() {
-            return sensor2_id;
-        }
-    }
-
-    //TODO: Are we using it? Or can we delete it?
-    public class DistanceComparator implements Comparator<Triplet> {
-        @Override
-        public int compare(Triplet triplet, Triplet t1) {
-            if (triplet.getDistance() < t1.getDistance()) return -1;
-            else if (triplet.getDistance() > t1.getDistance()) return 1;
-            else return 0;
-        }
-    }
-
     //Compare two Sensors first by capacity and after by distance.
     public class SensorComparator implements Comparator<Integer> {
         private int ind_c;
@@ -378,7 +325,7 @@ public class IAState {
     //method that given a sensor_id returns
     // a set with the sensors which are connected to it directly or indirectly
     private HashSet<Integer> dependingSensors(int sensor_id) {
-        HashSet<Integer> depending = new HashSet<Integer>();
+        HashSet<Integer> depending = new HashSet<>();
         for (int i = 0; i < connectedTo.length; ++i) {
             if (connectedTo[i] == numCenters+sensor_id) {
                 depending.add(i);
@@ -391,24 +338,53 @@ public class IAState {
     //Changes sensor_id output connection to destination,
     //and does all related work: modify flow, and array modifications
     public void changeConnection(int sensor_id, int destination) {
+        // 0.- disconnect sensor_id from previous connection DONE
         // 1.- change sensor_id connectedTo DONE
-        // 2.- change destination inputConnections
-        // 3.- change destination inputFlow
-        // 4.- change destination collectedDataVolume
+        // 2.- change destination inputConnections DONE
+        // 3.- change destination and previousConnection inputFlow DONE
+        // 4.- change destination collectedDataVolume (EN PRINCIPIO YA LO DEBERIA HACER updateFlow)
+
+        int previousConnection = connectedTo[numCenters+sensor_id];
+
+        inputConnections[previousConnection] -= 1;
 
         connectedTo[numCenters+sensor_id] = destination;
-        //destination is either a datacenter or sensor. NEGATIVE NEED TO BE MANAGED BY THE INVOKER
+        //destination is either a datacenter or sensor. NEGATIVE FOR CENTERS NEED TO BE MANAGED BY THE INVOKER
 
+        inputConnections[numCenters+destination] += 1;
 
-        int indice_dataCenter = numCenters+destination; //TODO: Revisar si se calcula bien el índice
+        Sensor sensorMoving = sensors.get(numCenters+sensor_id);
 
-        if (destination < 0) {
-            inputConnections[indice_dataCenter] += 1;
-        }
-        else { //destination is another sensor
-            inputConnections[numCenters+destination] += 1;
-        }
+        Double sensorMovingOutputFlow = inputFlow[numCenters+sensor_id]+sensorMoving.getCapacidad();
 
+        updateFlow(destination, sensorMovingOutputFlow);
+
+        updateFlow(previousConnection, -sensorMovingOutputFlow);
     }
+
+    public void swapConnections(int sensor_id_1, int sensor_id_2) {
+        // 0.- Change both connectedTo
+        // 1.- Update flow on both
+
+        int previousConnectionSensor1 = connectedTo[numCenters+sensor_id_1];
+        int previousConnectionSensor2 = connectedTo[numCenters+sensor_id_2];
+
+        connectedTo[numCenters+sensor_id_1] = previousConnectionSensor2;
+        connectedTo[numCenters+sensor_id_2] = previousConnectionSensor1;
+
+        Sensor sensor1 = sensors.get(numCenters+sensor_id_1);
+        Sensor sensor2 = sensors.get(numCenters+sensor_id_2);
+
+        Double sensorOneOutputFlow = inputFlow[numCenters+sensor_id_1]+sensor1.getCapacidad();
+        Double sensorTwoOutputFlow = inputFlow[numCenters+sensor_id_2]+sensor2.getCapacidad();
+
+        Double amountToUpdateOnPreviousConnectionOne = sensorTwoOutputFlow - sensorOneOutputFlow;
+        Double amountToUpdateOnPreviousConnectionTwo = sensorOneOutputFlow - sensorTwoOutputFlow;
+
+        updateFlow(previousConnectionSensor1, amountToUpdateOnPreviousConnectionOne);
+        updateFlow(previousConnectionSensor2, amountToUpdateOnPreviousConnectionTwo);
+    }
+
+
 
 }
