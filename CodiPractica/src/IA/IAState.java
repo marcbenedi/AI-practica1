@@ -137,9 +137,33 @@ public class IAState {
         this.collectedDataVolume = state.collectedDataVolume;
     }
 
-    public double heuristic() {
-        // compute the number of coins out of place respect to solution
-        return 0;
+    private double computeCost(){
+
+        double sum = 0.0;
+
+        for(int i = 0; i < numSensors; ++i)
+            sum += Math.pow(distances[i][connectedTo[i]+numCenters],2)* (inputFlow[i+numCenters]+sensors.get(i).getCapacidad());
+
+        return sum;
+    }
+
+    private int computeArrivalData(){
+
+        int sum = 0;
+
+        for(int i = 0; i < numCenters; ++i)
+            sum += inputFlow[i];
+
+        assert sum != 0;
+        return sum;
+    }
+
+    //min (cost/dades)
+    public double heuristic1() {
+        //Compute the cost
+        //Compute the data volume that enters in to the data centers.
+
+        return computeCost()/computeArrivalData();
     }
 
     public boolean is_goal() {
@@ -177,13 +201,15 @@ public class IAState {
                 inputFlow[s + numCenters] = maxFlowCenter;
             }
         }
+        //In case that there has been an error
+        assert inputFlow[s+numCenters] < 0;
     }
 
     //Returns the index of the nearest NOT connected sensor.
     //If there are not any free sensors the return value is -1.
     private Integer findNearestNotConnectedSensor(Integer s) {
         //TODO: Is really time expensive
-        //max = 0 because nothing will be closer to me than myself. 
+        //max = 0 because nothing will be closer to me than myself.
         double max = 0;
         int index_max = -1;
         for (int j = numCenters; j < numSensors + numCenters; ++j) {
@@ -291,12 +317,12 @@ public class IAState {
 
     //Calculate the distance between two sensors
     private double calculateDistance(Sensor s1, Sensor s2) {
-        return sqrt((s1.getCoordX() - s2.getCoordX()) ^ 2 + (s1.getCoordY() - s2.getCoordY()) ^ 2);
+        return sqrt(Math.pow((s1.getCoordX() - s2.getCoordX()), 2) + Math.pow((s1.getCoordY() - s2.getCoordY()), 2));
     }
 
     //Calculate the distance between one sensor and one center
     private double calculateDistance(Sensor s, Centro c) {
-        return sqrt((s.getCoordX() - c.getCoordX()) ^ 2 + (s.getCoordY() - c.getCoordY()) ^ 2);
+        return sqrt(Math.pow((s.getCoordX() - c.getCoordX()), 2) + Math.pow((s.getCoordY() - c.getCoordY()), 2));
     }
 
     //Compare two Sensors first by capacity and after by distance.
@@ -326,14 +352,16 @@ public class IAState {
         }
     }
 
-    // _______________ SUCCESOR GENERATOR
+    //-----------------------------------------SUCCESOR GENERATOR-------------------------------------------------------
 
-    // ________________ 1: Canviar connexió ___________________________
+    //----------------------------------------1: Canviar connexió-------------------------------------------------------
 
     //Returns a list with two lists containing
     // all the spots (sensors and data centers) that have availability for input connections.
+    // where I could be connected. (and I will still be in the solution space)
     public ArrayList<ArrayList<Integer>> getAllPosibleDestinations(int sensor_id) {
         HashSet<Integer> dependant = dependingSensors(sensor_id);
+        //centersSpots are centers with spare connections.
         ArrayList<Integer> centersSpots = new ArrayList<>();
         for (int i = 0; i < numCenters; ++i) {
             if (inputConnections[i] < inputMaxCenter) {
@@ -343,13 +371,13 @@ public class IAState {
         ArrayList<Integer> sensorsSpots = new ArrayList<>();
         for (int i = numCenters; i < numCenters+numSensors; ++i) {
             if (inputConnections[i] < inputMaxSensor) {
-                if (!dependant.contains(i-numCenters)) {
-                    if (i - numCenters != sensor_id) {
-                        sensorsSpots.add(i - numCenters);
-                    }
+                //To avoid loops and If it is not me
+                if (!dependant.contains(i-numCenters) && i - numCenters != sensor_id) {
+                    sensorsSpots.add(i - numCenters);
                 }
             }
         }
+
         ArrayList<ArrayList<Integer>> result = new ArrayList<>();
         result.add(centersSpots);
         result.add(sensorsSpots);
@@ -360,8 +388,9 @@ public class IAState {
     // a set with the sensors which are connected to it directly or indirectly
     private HashSet<Integer> dependingSensors(int sensor_id) {
         HashSet<Integer> depending = new HashSet<>();
-        for (int i = 0; i < connectedTo.length; ++i) {
-            if (connectedTo[i] == numCenters+sensor_id) {
+        for (int i = 0; i < numSensors; ++i) {
+            //If I'm connected to sensor_id
+            if (connectedTo[i] == sensor_id) {
                 depending.add(i);
                 depending.addAll(dependingSensors(i));
             }
@@ -381,23 +410,21 @@ public class IAState {
 
         int previousConnection = connectedTo[sensor_id];
 
-        inputConnections[previousConnection] -= 1;
+        inputConnections[numCenters+previousConnection] -= 1;
 
         connectedTo[sensor_id] = destination;
         //destination is either a datacenter or sensor. NEGATIVE FOR CENTERS NEED TO BE MANAGED BY THE INVOKER
 
         inputConnections[numCenters+destination] += 1;
 
-        Sensor sensorMoving = sensors.get(sensor_id);
+        Double sensorOutputFlow  = inputFlow[numCenters+sensor_id]+sensors.get(sensor_id).getCapacidad();
 
-        Double sensorMovingOutputFlow = inputFlow[numCenters+sensor_id]+sensorMoving.getCapacidad();
+        updateFlow(destination, sensorOutputFlow);
 
-        updateFlow(destination, sensorMovingOutputFlow);
-
-        updateFlow(previousConnection, -sensorMovingOutputFlow);
+        updateFlow(previousConnection, -sensorOutputFlow);
     }
 
-    //_________________ 2: SWAP CONNECTIONS _____________________
+    //------------------------------------2: SWAP CONNECTIONS-----------------------------------------------------------
 
     //Returns all non-dependant pairs of sensors in a set of arraylist in which the first component is always
     //the sensor with the lower id
@@ -406,23 +433,21 @@ public class IAState {
         for (int i = 0; i < numSensors; ++i) {
             HashSet<Integer> dependant = dependingSensors(i);
             for (int j = 0; j < numSensors; ++j) {
-                if (!dependant.contains(j)) {
-                    if (i != j) {
-                        ArrayList<Integer> pair = new ArrayList<>();
-                        if (i < j) {
-                            pair.add(i);
-                            pair.add(j);
-                        }
-                        else {
-                            pair.add(j);
-                            pair.add(i);
-                        }
-                        pairs.add(pair);
+                if (!dependant.contains(j) && i != j) {
+                    ArrayList<Integer> pair = new ArrayList<>();
+                    if (i < j) {
+                        pair.add(i);
+                        pair.add(j);
                     }
+                    else {
+                        pair.add(j);
+                        pair.add(i);
+                    }
+                    pairs.add(pair);
                 }
             }
         }
-        return new HashSet<ArrayList<Integer>>(pairs);
+        return new HashSet<>(pairs);
     }
 
 
@@ -431,14 +456,18 @@ public class IAState {
         // 0.- Change both connectedTo
         // 1.- Update flow on both
 
-        int previousConnectionSensor1 = connectedTo[numCenters+sensor_id_1];
-        int previousConnectionSensor2 = connectedTo[numCenters+sensor_id_2];
+        //TODO: Maybe it can be done with changeConnection()
+        //Problem: If all the sensors are full we can not disconnect and then connect to the other before disconnecting
+        //the other.
 
-        connectedTo[numCenters+sensor_id_1] = previousConnectionSensor2;
-        connectedTo[numCenters+sensor_id_2] = previousConnectionSensor1;
+        int previousConnectionSensor1 = connectedTo[sensor_id_1];
+        int previousConnectionSensor2 = connectedTo[sensor_id_2];
 
-        Sensor sensor1 = sensors.get(numCenters+sensor_id_1);
-        Sensor sensor2 = sensors.get(numCenters+sensor_id_2);
+        connectedTo[sensor_id_1] = previousConnectionSensor2;
+        connectedTo[sensor_id_2] = previousConnectionSensor1;
+
+        Sensor sensor1 = sensors.get(sensor_id_1);
+        Sensor sensor2 = sensors.get(sensor_id_2);
 
         Double sensorOneOutputFlow = inputFlow[numCenters+sensor_id_1]+sensor1.getCapacidad();
         Double sensorTwoOutputFlow = inputFlow[numCenters+sensor_id_2]+sensor2.getCapacidad();
@@ -449,7 +478,5 @@ public class IAState {
         updateFlow(previousConnectionSensor1, amountToUpdateOnPreviousConnectionOne);
         updateFlow(previousConnectionSensor2, amountToUpdateOnPreviousConnectionTwo);
     }
-
-
 
 }

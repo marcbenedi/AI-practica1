@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * Created by bejar on 17/01/17.
- */
+//TODO: Marc: Repassar
 public class IASuccesorFunction implements SuccessorFunction{
 
     public List getSuccessors(Object state){

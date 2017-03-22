@@ -17,6 +17,7 @@ public class Main {
         IAState myState = new IAState();
 
         System.out.println("Calling the heuristic function");
-        myState.heuristic();
+        Double t = myState.heuristic1();
+        System.out.println(t);
     }
 }
