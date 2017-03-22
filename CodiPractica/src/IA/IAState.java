@@ -133,7 +133,7 @@ public class IAState {
 
     }
 
-    //Constructor por copia
+    //Constructor by copy
     public IAState(IAState state) {
         //TODO: Potser s'ha de posar .clone perquè sinó faran referència al mateix array.
         this.connectedTo = state.connectedTo;
