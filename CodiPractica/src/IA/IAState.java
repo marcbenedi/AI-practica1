@@ -56,12 +56,6 @@ public class IAState {
     private static CentrosDatos centers;
     //Index from 0 to numSensors-1
     private static Sensores sensors;
-
-    //Index from 0 to numCenter-1
-    //Integer goes from 0 to numSensors-1
-    //Ordered by ascending distance
-    private static ArrayList<PriorityQueue<Integer>> volumeDistanceOrderedSensorsPerCenter;
-
     //Distance matrix. Rows = numSensors, Columns = numCenter + numSensors. (The first columns reference centers)
     private static double[][] distances;
     //------------------------------------------------------------------------------------------------------------------
@@ -86,8 +80,7 @@ public class IAState {
 
 
     //TODO: Be sure that the static variables are initialized in the creator function
-
-
+    //Segons l'Hermes no fa falta perquè generem un estat nou a partir del constructor per copia
 
     public static int getNumCenters() {
         return numCenters;
@@ -113,14 +106,15 @@ public class IAState {
         collectedDataVolume = new int[numSensors + numCenters];
         distances = new double[numSensors][numCenters + numSensors];
 
-        //Initializing the value
+        //Initializing the value of the CENTERS [0 .. numCenters]
         for (int i = 0; i < numCenters; ++i) {
             collectedDataVolume[i] = maxFlowCenter;
             inputConnections[i] = 0;
             inputFlow[i] = 0;
         }
 
-        for (int i = numCenters; i < numSensors+numCenters; ++i) { //TODO: BUCLE NO DEBERIA IR HASTA numS+numC ????
+        //Initializing the value of the SENSORS [numCenters .. numCenters+numSensors] - shift = [0 .. numSensors]
+        for (int i = numCenters; i < numSensors+numCenters; ++i) {
             collectedDataVolume[i] = (int) sensors.get(i - numCenters).getCapacidad();
             connectedTo[i - numCenters] = notConnected;
             inputConnections[i] = 0;
@@ -136,16 +130,11 @@ public class IAState {
     //Constructor by copy
     public IAState(IAState state) {
         //TODO: Potser s'ha de posar .clone perquè sinó faran referència al mateix array.
+        //L'Hermes have tried and it works as it says.
         this.connectedTo = state.connectedTo;
         this.inputConnections = state.inputConnections;
         this.inputFlow = state.inputFlow;
         this.collectedDataVolume = state.collectedDataVolume;
-    }
-
-    //This method initializes all the static variables
-    public static void initClass(){
-        //TODO: Be sure that the static variables are initialized in the creator function
-        //Because if we do this in the creator object, we will be doing the same every time we apply some operator
     }
 
     public double heuristic() {
@@ -154,41 +143,48 @@ public class IAState {
     }
 
     public boolean is_goal() {
-        // compute if board = solution
+        //Because we are using High Climbing it always return false.
         return false;
     }
 
     //Updates the incoming flow of a sensor or a center. If the amount of flow is greater than my capacity, the extra
-    //flow is lost and I send my max output flow + my collected data value.
+    //flow is lost and I send my max output flow (3*collectedDataValue).
     private void updateFlow(Integer s, Double capacity) {
+        //TODO: int capacity = parametre.intValue(); (per evitar tantes crides a intValue()).
         // Base case, I am in a sensor.
         if (s >= 0) {
-
             //We don't exceed our collectedDataVolume
             if(2* collectedDataVolume[s+numCenters] >= inputFlow[s + numCenters] + capacity.intValue()){
-                inputFlow[s+numCenters] += capacity.intValue();
                 updateFlow(connectedTo[s], capacity);
+                inputFlow[s+numCenters] += capacity.intValue();
             }
             else {
                 //We exceed our collectedDataVolume, we send our collectedDataVolume
+                //Difference: My maximum output (3*myCollectedValue) - what is was sending you before.
+                //3*collectedDataVolume - (inputFlow + myCollectedDataValue)
+                //2*collectedDataVolumne - inputFlow
                 updateFlow(connectedTo[s], (double) 2*collectedDataVolume[s+numCenters] - inputFlow[s+numCenters]);
                 inputFlow[s+numCenters] = 2*collectedDataVolume[s+numCenters];
             }
-
-            //inputFlow[s + numCenters] = min(inputFlow[s + numCenters] + capacity.intValue(), (int) sensors.get(s).getCapacidad()*2);
-            //updateFlow(connectedTo[s], capacity);
         }
         // I am in a data center.
         else {
-            //TODO: Mirar limit del datacenter
-            inputFlow[s + numCenters] += capacity;
+            //We don't exceed
+            if(maxFlowCenter >= inputFlow[s + numCenters] + capacity.intValue()){
+                inputFlow[s+numCenters] += capacity.intValue();
+            }
+            else{
+                inputFlow[s + numCenters] = maxFlowCenter;
+            }
         }
     }
 
     //Returns the index of the nearest NOT connected sensor.
     //If there are not any free sensors the return value is -1.
     private Integer findNearestNotConnectedSensor(Integer s) {
-        double max = -1;
+        //TODO: Is really time expensive
+        //max = 0 because nothing will be closer to me than myself. 
+        double max = 0;
         int index_max = -1;
         for (int j = numCenters; j < numSensors + numCenters; ++j) {
             if (max < distances[s][j] && connectedTo[j - numCenters] == notConnected) {
@@ -199,18 +195,40 @@ public class IAState {
         return index_max;
     }
 
+    //For each center, this function calculates its distance between it and all the sensors.
+    private void calculateQueuePerCenter(ArrayList<PriorityQueue<Integer>> volumeDistanceOrderedSensorsPerCenter) {
+        int index_center = 0;
+        for (Centro c : centers) {
+            volumeDistanceOrderedSensorsPerCenter.add(new PriorityQueue<Integer>(new SensorComparator(index_center)));
+            for (int i = 0; i < numSensors; ++i) {
+                volumeDistanceOrderedSensorsPerCenter.get(index_center).add(i);
+            }
+            ++index_center;
+        }
+    }
+
     //First connect all the sensors of 5MB to the data centers. Secondly those with 2MB to the 5MB and finally the 1MB to 2MB.
+    //In case that we are short of any of those sensors we proceed with the next decreasing sensort type.
     private void generarSolucioInicial1() {
 
         Queue<Integer> this_level = new LinkedList<>();
-        calculateQueuePerCenter();
+
+        //Index from 0 to numCenter-1
+        //Integer goes from 0 to numSensors-1
+        //Ordered by ascending distance
+        ArrayList<PriorityQueue<Integer>> volumeDistanceOrderedSensorsPerCenter = new ArrayList<>();
+
+        calculateQueuePerCenter(volumeDistanceOrderedSensorsPerCenter);
 
         int index_c = -numCenters;
 
         for (Centro c : centers) {
+            //Poll: Top pop
+            //s is the index of the greatest (and nearest) sensor.
             Integer s = volumeDistanceOrderedSensorsPerCenter.get(numCenters + index_c).poll();
+            //If there are any sensors and the center has free space.
             while (s != null && inputConnections[numCenters + index_c] < inputMaxCenter) {
-                //If it is not connected
+                //If s sensor is not connected
                 if (connectedTo[s] == notConnected) {
                     connectedTo[s] = index_c;
                     this_level.add(s);
@@ -222,13 +240,21 @@ public class IAState {
             ++index_c;
         }
 
-        //The first level is covered
+        //Connecting sensors to sensors.
 
+        //The first level is covered (either the first level is full or there are spare sensors).
+        //Then we proceed with the second level, and so forth.
+
+        //available respresents if there are spare sensors.
         boolean available = true;
+        //If we have spare sensors (available) and we have some sensors (already connected) to connecto to (this level)
+        //TODO: SI this_leve.isEmpty() vol dir que no en queden lliure, ergo available sera FALSE
         while (!this_level.isEmpty() && available) {
+            //These sensors are the ones connected to this level.
             Queue<Integer> next_level = new LinkedList<>();
             while (!this_level.isEmpty() && available) {
                 Integer s = this_level.poll();
+                //We have a space sensor and it has enough space.
                 while (s != null && inputConnections[s + numCenters] < inputMaxSensor && available) {
                     Integer i = findNearestNotConnectedSensor(s);
                     // If there is a free sensor to connect to s
@@ -236,7 +262,8 @@ public class IAState {
                         connectedTo[i] = s;
                         next_level.add(i);
                         inputConnections[s + numCenters] += 1;
-                        updateFlow(connectedTo[s], sensors.get(s).getCapacidad());
+                        //updateFlow(connectedTo[s], sensors.get(s).getCapacidad());
+                        updateFlow(s /*connectedTo[i] = s*/, sensors.get(i).getCapacidad());
                     } else {
                         available = false;
                     }
@@ -250,26 +277,15 @@ public class IAState {
     //0 <= j < numCenters : Centers
     //numCenters <= j < numCenters + numSensors : Sensor (But sensors[j-numCenters]).
     private void calculateDistanceMatrix() {
+        //Rows
         for (int i = 0; i < numSensors; ++i) {
+            //Columns
             for (int j = 0; j < numCenters + numSensors; ++j) {
                 if (j < numCenters)
                     distances[i][j] = calculateDistance(sensors.get(i), centers.get(j));
                 else
                     distances[i][j] = calculateDistance(sensors.get(i), sensors.get(j - numCenters));
             }
-        }
-    }
-
-    //For each center, this function calculates its distance between it and all the sensors.
-    private void calculateQueuePerCenter() {
-        volumeDistanceOrderedSensorsPerCenter = new ArrayList<>();
-        int index_center = 0;
-        for (Centro c : centers) {
-            volumeDistanceOrderedSensorsPerCenter.add(new PriorityQueue<Integer>(new SensorComparator(index_center)));
-            for (int i = 0; i < numSensors; ++i) {
-                volumeDistanceOrderedSensorsPerCenter.get(index_center).add(i);
-            }
-            ++index_center;
         }
     }
 
@@ -316,7 +332,6 @@ public class IAState {
 
     //Returns a list with two lists containing
     // all the spots (sensors and data centers) that have availability for input connections.
-
     public ArrayList<ArrayList<Integer>> getAllPosibleDestinations(int sensor_id) {
         HashSet<Integer> dependant = dependingSensors(sensor_id);
         ArrayList<Integer> centersSpots = new ArrayList<>();
@@ -361,18 +376,19 @@ public class IAState {
         // 1.- change sensor_id connectedTo DONE
         // 2.- change destination inputConnections DONE
         // 3.- change destination and previousConnection inputFlow DONE
-        // 4.- change destination collectedDataVolume (EN PRINCIPIO YA LO DEBERIA HACER updateFlow)
+        // 4.- change destination collectedDataVolume
+        // +(EN PRINCIPIO YA LO DEBERIA HACER updateFlow)
 
-        int previousConnection = connectedTo[numCenters+sensor_id];
+        int previousConnection = connectedTo[sensor_id];
 
         inputConnections[previousConnection] -= 1;
 
-        connectedTo[numCenters+sensor_id] = destination;
+        connectedTo[sensor_id] = destination;
         //destination is either a datacenter or sensor. NEGATIVE FOR CENTERS NEED TO BE MANAGED BY THE INVOKER
 
         inputConnections[numCenters+destination] += 1;
 
-        Sensor sensorMoving = sensors.get(numCenters+sensor_id);
+        Sensor sensorMoving = sensors.get(sensor_id);
 
         Double sensorMovingOutputFlow = inputFlow[numCenters+sensor_id]+sensorMoving.getCapacidad();
 
