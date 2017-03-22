@@ -37,10 +37,10 @@ public class IAState {
     *
     * Explanation of the value connectedTo(i)
     *
-    * When the value v==-numCenters-1 it represents
+    * When the value v == -numCenters-1 it represents
     * that this SENSOR (i) is NOT connected TO ANYBODY
     *
-    * When the value -numCenters-1< v <0 it represents
+    * When the value -numCenters - 1 < v < 0 it represents
     * that the SENSOR (i) is connected to
     * the CENTER in the position numCenters+v
     * in the DS centers
@@ -110,7 +110,7 @@ public class IAState {
             inputFlow[i] = 0;
         }
 
-        for (int i = numCenters; i < numSensors; ++i) {
+        for (int i = numCenters; i < numSensors; ++i) { //TODO: BUCLE NO DEBERIA IR HASTA numS+numC ????
             collectedDataVolume[i] = (int) sensors.get(i - numCenters).getCapacidad();
             connectedTo[i - numCenters] = notConnected;
             inputConnections[i] = 0;
@@ -342,6 +342,73 @@ public class IAState {
                 else return 1;
             }
         }
+    }
+
+    // _______________ SUCCESOR GENERATOR
+
+    // ________________ 1: Canviar connexió ___________________________
+
+    //Returns a list with two lists containing
+    // all the spots (sensors and data centers) that have availability for input connections.
+
+    public ArrayList getAllPosibleDestinations(int sensor_id) {
+        HashSet<Integer> dependant = dependingSensors(sensor_id);
+        ArrayList<Integer> centersSpots = new ArrayList<>();
+        for (int i = 0; i < numCenters; ++i) {
+            if (inputConnections[i] < inputMaxCenter) {
+                centersSpots.add(i);
+            }
+        }
+        ArrayList<Integer> sensorsSpots = new ArrayList<>();
+        for (int i = numCenters; i < numCenters+numSensors; ++i) {
+            if (inputConnections[i] < inputMaxSensor) {
+                if (!dependant.contains(i-numCenters)) {
+                    if (i - numCenters != sensor_id) {
+                        sensorsSpots.add(i - numCenters);
+                    }
+                }
+            }
+        }
+        ArrayList<ArrayList> result = new ArrayList<>();
+        result.add(centersSpots);
+        result.add(sensorsSpots);
+        return result;
+    }
+
+    //method that given a sensor_id returns
+    // a set with the sensors which are connected to it directly or indirectly
+    private HashSet<Integer> dependingSensors(int sensor_id) {
+        HashSet<Integer> depending = new HashSet<Integer>();
+        for (int i = 0; i < connectedTo.length; ++i) {
+            if (connectedTo[i] == numCenters+sensor_id) {
+                depending.add(i);
+                depending.addAll(dependingSensors(i));
+            }
+        }
+        return depending;
+    }
+
+    //Changes sensor_id output connection to destination,
+    //and does all related work: modify flow, and array modifications
+    public void changeConnection(int sensor_id, int destination) {
+        // 1.- change sensor_id connectedTo DONE
+        // 2.- change destination inputConnections
+        // 3.- change destination inputFlow
+        // 4.- change destination collectedDataVolume
+
+        connectedTo[numCenters+sensor_id] = destination;
+        //destination is either a datacenter or sensor. NEGATIVE NEED TO BE MANAGED BY THE INVOKER
+
+
+        int indice_dataCenter = numCenters+destination; //TODO: Revisar si se calcula bien el índice
+
+        if (destination < 0) {
+            inputConnections[indice_dataCenter] += 1;
+        }
+        else { //destination is another sensor
+            inputConnections[numCenters+destination] += 1;
+        }
+
     }
 
 }
