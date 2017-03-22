@@ -120,7 +120,7 @@ public class IAState {
             inputFlow[i] = 0;
         }
 
-        for (int i = numCenters; i < numSensors; ++i) { //TODO: BUCLE NO DEBERIA IR HASTA numS+numC ????
+        for (int i = numCenters; i < numSensors+numCenters; ++i) { //TODO: BUCLE NO DEBERIA IR HASTA numS+numC ????
             collectedDataVolume[i] = (int) sensors.get(i - numCenters).getCapacidad();
             connectedTo[i - numCenters] = notConnected;
             inputConnections[i] = 0;
