@@ -121,7 +121,7 @@ public class IAState {
             inputFlow[i] = 0;
         }
 
-        calculateDistanceMatrix();
+        initDistanceMatrix();
         //Generate the initial solution 1
         generarSolucioInicial1();
 
@@ -351,7 +351,7 @@ public class IAState {
     //Fills up the distance matrix. distance[i][j] is the distance between the sensor i and the center/sensor j.
     //0 <= j < numCenters : Centers
     //numCenters <= j < numCenters + numSensors : Sensor (But sensors[j-numCenters]).
-    private void calculateDistanceMatrix() {
+    private void initDistanceMatrix() {
         //Rows
         for (int i = 0; i < numSensors; ++i) {
             //Columns
