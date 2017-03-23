@@ -18,11 +18,10 @@ public class Main {
         System.out.println("Createing IAState");
 
         IAState myState = new IAState();
-        myState.printState();
+        //myState.printState();
 
         System.out.println("Calling the heuristic function - FOR TESTING PURPOSES");
-        Double t = myState.heuristic1();
-        System.out.println(t);
+        System.out.println("The initial state heuristic value is = "+myState.heuristic1());
 
         // Create the Problem object
         Problem p = new  Problem(
@@ -37,18 +36,20 @@ public class Main {
         SearchAgent agent = new SearchAgent(p, alg);
 
         // We print the results of the search
-        System.out.println("We found the best local solution");
-        printActions(agent.getActions());
-        printInstrumentation(agent.getInstrumentation());
-
+        System.out.println("We have found the best local solution");
         // You can access also to the goal state using the
         // method getGoalState of class Search
         IAState fin = (IAState) alg.getGoalState();
-        System.out.println(fin.heuristic1());
-        System.out.println(fin.calculPrint());
+        System.out.println("The heuristic value for the solution state is = " + fin.heuristic1());
+
+        //printActions(agent.getActions());
+        printInstrumentation(agent.getInstrumentation());
+
+        System.out.println(fin.printTotalCostCalculation());
     }
 
     private static void printInstrumentation(Properties properties) {
+        System.out.println("Instrumentation:");
         Iterator keys = properties.keySet().iterator();
         while (keys.hasNext()) {
             String key = (String) keys.next();
@@ -61,6 +62,7 @@ public class Main {
 
 
     private static void printActions(List actions) {
+        System.out.println("Actions done");
         for (int i = 0; i < actions.size(); i++) {
             String action = (String) actions.get(i);
             System.out.println(action);

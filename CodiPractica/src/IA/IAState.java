@@ -138,83 +138,6 @@ public class IAState {
         this.collectedDataVolume = state.collectedDataVolume.clone();
     }
 
-    public void printState(){
-        //100x100 geografic area
-        for (double i = 0.0; i < 100.0; ++i){
-            for(double j = 0.0; j < 100.0; ++j){
-                //Search if there is a sensor or center in that position
-                boolean found = false;
-                for(int c = 0; c < numCenters && !found; ++c){
-                    double x = centers.get(c).getCoordX();
-                    double y = centers.get(c).getCoordY();
-                    if(x == j && y == i){
-                        found = true;
-                        System.out.print(c-numCenters);
-                    }
-                }
-                for (int s = 0; s < numSensors && !found; ++s){
-                    double x = sensors.get(s).getCoordX();
-                    double y = sensors.get(s).getCoordY();
-                    if(x == j && y == i){
-                        found = true;
-                        System.out.print(s);
-                    }
-                }
-                if(!found) System.out.print("·");
-            }
-            System.out.println();
-        }
-    }
-
-    private int computeCost(){
-
-        int sum = 0;
-
-        for(int i = 0; i < numSensors; ++i) {
-            sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
-        }
-        return sum;
-    }
-
-    public int calculPrint(){
-
-        int sum = 0;
-        System.out.println("INI CALCULPRINT");
-        for(int i = 0; i < numSensors; ++i) {
-            System.out.println("la distancia és de " +distances[i][connectedTo[i] + numCenters]);
-            sum += Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
-            System.out.println("sum = " + sum);
-        }
-        return sum;
-    }
-
-    private int computeArrivalData(){
-
-        int sum = 0;
-
-        for(int i = 0; i < numCenters; ++i)
-            sum += inputFlow[i];
-
-        assert sum != 0;
-        return sum;
-    }
-
-    //min (cost/dades) ~= max(dades/cost)
-    public double heuristic1() {
-        //TODO: There is a overflow problem with the double variables.
-        double x = computeArrivalData();
-        int y = computeCost();
-        //System.out.println("AAAAAAAAAAAAAA");
-        //System.out.println(x);
-        //System.out.println(y);
-        //TODO: Assert is not working. x = -1;
-        assert x >= 0;
-        assert y >= 0;
-        return x/y;
-        //return computeArrivalData()/computeCost();
-        //return computeCost()/computeArrivalData();
-    }
-
     public boolean is_goal() {
         //Because we are using High Climbing it always return false.
         return false;
@@ -526,6 +449,84 @@ public class IAState {
 
         updateFlow(previousConnectionSensor1, amountToUpdateOnPreviousConnectionOne);
         updateFlow(previousConnectionSensor2, amountToUpdateOnPreviousConnectionTwo);
+    }
+
+    //-------------------------------------HEURISTIC FUNCTIONS----------------------------------------------------------
+    private int computeCost(){
+
+        int sum = 0;
+
+        for(int i = 0; i < numSensors; ++i) {
+            sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
+        }
+        return sum;
+    }
+
+    private int computeArrivalData(){
+
+        int sum = 0;
+
+        for(int i = 0; i < numCenters; ++i)
+            sum += inputFlow[i];
+
+        assert sum != 0;
+        return sum;
+    }
+
+    //min (cost/dades) ~= max(dades/cost)
+    public double heuristic1() {
+        //TODO: There is a overflow problem with the double variables.
+        double x = computeArrivalData();
+        int y = computeCost();
+        //System.out.println("AAAAAAAAAAAAAA");
+        //System.out.println(x);
+        //System.out.println(y);
+        //TODO: Assert is not working. x = -1;
+        assert x >= 0;
+        assert y >= 0;
+        return x/y;
+        //return computeArrivalData()/computeCost();
+        //return computeCost()/computeArrivalData();
+    }
+
+    //------------------------------------------DEBUGGING FUNCTIONS-----------------------------------------------------
+    public int printTotalCostCalculation(){
+        int sum = 0;
+        System.out.println("INI CALCULPRINT");
+        for(int i = 0; i < numSensors; ++i) {
+            System.out.println("la distancia és de " +distances[i][connectedTo[i] + numCenters]);
+            sum += Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
+            System.out.println("sum = " + sum);
+        }
+        return sum;
+    }
+
+    public void printState(){
+        //100x100 geografic area
+        for (double i = 0.0; i < 100.0; ++i){
+            for(double j = 0.0; j < 100.0; ++j){
+                //Search if there is a sensor or center in that position
+                boolean found = false;
+                for(int c = 0; c < numCenters && !found; ++c){
+                    double x = centers.get(c).getCoordX();
+                    double y = centers.get(c).getCoordY();
+                    if(x == j && y == i){
+                        found = true;
+                        System.out.print(c-numCenters);
+                    }
+                }
+                for (int s = 0; s < numSensors && !found; ++s){
+                    double x = sensors.get(s).getCoordX();
+                    double y = sensors.get(s).getCoordY();
+                    if(x == j && y == i){
+                        found = true;
+                        System.out.print(s);
+                    }
+                }
+                if(!found) System.out.print("·");
+            }
+            System.out.println();
+        }
     }
 
 }
