@@ -183,8 +183,7 @@ public class IAState {
         for(int i = 0; i < numSensors; ++i) {
             System.out.println("la distancia és de " +distances[i][connectedTo[i] + numCenters]);
             sum += Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
-
-            System.out.println(sum);
+            System.out.println("sum = " + sum);
         }
         return sum;
     }
@@ -208,6 +207,7 @@ public class IAState {
         //System.out.println("AAAAAAAAAAAAAA");
         //System.out.println(x);
         //System.out.println(y);
+        //TODO: Assert is not working. x = -1;
         assert x >= 0;
         assert y >= 0;
         return x/y;
