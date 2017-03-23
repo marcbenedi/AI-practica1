@@ -45,6 +45,7 @@ public class Main {
         // method getGoalState of class Search
         IAState fin = (IAState) alg.getGoalState();
         System.out.println(fin.heuristic1());
+        System.out.println(fin.calculPrint());
     }
 
     private static void printInstrumentation(Properties properties) {

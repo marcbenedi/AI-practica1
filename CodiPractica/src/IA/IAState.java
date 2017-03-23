@@ -166,13 +166,26 @@ public class IAState {
         }
     }
 
-    private double computeCost(){
+    private int computeCost(){
 
-        double sum = 0.0;
+        int sum = 0;
 
-        for(int i = 0; i < numSensors; ++i)
-            sum += Math.pow(distances[i][connectedTo[i]+numCenters],2)* (inputFlow[i+numCenters]+sensors.get(i).getCapacidad());
+        for(int i = 0; i < numSensors; ++i) {
+            sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
+        }
+        return sum;
+    }
 
+    public int calculPrint(){
+
+        int sum = 0;
+        System.out.println("INI CALCULPRINT");
+        for(int i = 0; i < numSensors; ++i) {
+            System.out.println("la distancia és de " +distances[i][connectedTo[i] + numCenters]);
+            sum += Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
+
+            System.out.println(sum);
+        }
         return sum;
     }
 
@@ -191,10 +204,10 @@ public class IAState {
     public double heuristic1() {
         //TODO: There is a overflow problem with the double variables.
         double x = computeArrivalData();
-        double y = computeCost();
-        System.out.println("AAAAAAAAAAAAAA");
-        System.out.println(x);
-        System.out.println(y);
+        int y = computeCost();
+        //System.out.println("AAAAAAAAAAAAAA");
+        //System.out.println(x);
+        //System.out.println(y);
         assert x >= 0;
         assert y >= 0;
         return x/y;
