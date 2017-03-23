@@ -137,6 +137,34 @@ public class IAState {
         this.collectedDataVolume = state.collectedDataVolume;
     }
 
+    public void printState(){
+        //100x100 geografic area
+        for (double i = 0.0; i < 100.0; ++i){
+            for(double j = 0.0; j < 100.0; ++j){
+                //Search if there is a sensor or center in that position
+                boolean found = false;
+                for(int c = 0; c < numCenters && !found; ++c){
+                    double x = centers.get(c).getCoordX();
+                    double y = centers.get(c).getCoordY();
+                    if(x == j && y == i){
+                        found = true;
+                        System.out.print(c-numCenters);
+                    }
+                }
+                for (int s = 0; s < numSensors && !found; ++s){
+                    double x = sensors.get(s).getCoordX();
+                    double y = sensors.get(s).getCoordY();
+                    if(x == j && y == i){
+                        found = true;
+                        System.out.print(s);
+                    }
+                }
+                if(!found) System.out.print("·");
+            }
+            System.out.println();
+        }
+    }
+
     private double computeCost(){
 
         double sum = 0.0;
@@ -163,7 +191,7 @@ public class IAState {
         //Compute the cost
         //Compute the data volume that enters in to the data centers.
 
-        return computeCost()/computeArrivalData();
+        return computeArrivalData()/computeCost();
     }
 
     public boolean is_goal() {
