@@ -6,7 +6,6 @@ import aima.search.framework.Problem;
 import aima.search.framework.Search;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.HillClimbingSearch;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -18,7 +17,7 @@ public class Main {
         System.out.println("Createing IAState");
 
         IAState myState = new IAState();
-        //myState.printState();
+        myState.printState();
 
         System.out.println("Calling the heuristic function - FOR TESTING PURPOSES");
         System.out.println("The initial state heuristic value is = "+myState.heuristic1());
@@ -56,10 +55,7 @@ public class Main {
             String property = properties.getProperty(key);
             System.out.println(key + " : " + property);
         }
-
     }
-
-
 
     private static void printActions(List actions) {
         System.out.println("Actions done");

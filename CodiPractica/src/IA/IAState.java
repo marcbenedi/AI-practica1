@@ -494,7 +494,7 @@ public class IAState {
         int sum = 0;
         System.out.println("INI CALCULPRINT");
         for(int i = 0; i < numSensors; ++i) {
-            System.out.println("la distancia és de " +distances[i][connectedTo[i] + numCenters]);
+            System.out.println("la distancia és de " +distances[i][connectedTo[i] + numCenters]+ " entre "+ i + " "+ connectedTo[i]);
             sum += Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
             System.out.println("sum = " + sum);
         }
