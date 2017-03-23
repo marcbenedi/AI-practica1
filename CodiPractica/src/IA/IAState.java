@@ -131,10 +131,11 @@ public class IAState {
     public IAState(IAState state) {
         //TODO: Potser s'ha de posar .clone perquè sinó faran referència al mateix array.
         //L'Hermes have tried and it works as it says.
-        this.connectedTo = state.connectedTo;
-        this.inputConnections = state.inputConnections;
-        this.inputFlow = state.inputFlow;
-        this.collectedDataVolume = state.collectedDataVolume;
+        //Marc: If we don't put clone Hill Climbing ony expands 1 node.
+        this.connectedTo = state.connectedTo.clone();
+        this.inputConnections = state.inputConnections.clone();
+        this.inputFlow = state.inputFlow.clone();
+        this.collectedDataVolume = state.collectedDataVolume.clone();
     }
 
     public void printState(){
@@ -186,12 +187,19 @@ public class IAState {
         return sum;
     }
 
-    //min (cost/dades)
+    //min (cost/dades) ~= max(dades/cost)
     public double heuristic1() {
-        //Compute the cost
-        //Compute the data volume that enters in to the data centers.
-
-        return computeArrivalData()/computeCost();
+        //TODO: There is a overflow problem with the double variables.
+        double x = computeArrivalData();
+        double y = computeCost();
+        System.out.println("AAAAAAAAAAAAAA");
+        System.out.println(x);
+        System.out.println(y);
+        assert x >= 0;
+        assert y >= 0;
+        return x/y;
+        //return computeArrivalData()/computeCost();
+        //return computeCost()/computeArrivalData();
     }
 
     public boolean is_goal() {

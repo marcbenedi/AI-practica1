@@ -7,7 +7,9 @@ import aima.search.framework.Search;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.HillClimbingSearch;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 public class Main {
 
@@ -37,13 +39,14 @@ public class Main {
         // We print the results of the search
         System.out.println("We found the best local solution");
         printActions(agent.getActions());
-        //printInstrumentation(agent.getInstrumentation());
+        printInstrumentation(agent.getInstrumentation());
 
         // You can access also to the goal state using the
         // method getGoalState of class Search
-
+        IAState fin = (IAState) alg.getGoalState();
+        System.out.println(fin.heuristic1());
     }
-    /*
+
     private static void printInstrumentation(Properties properties) {
         Iterator keys = properties.keySet().iterator();
         while (keys.hasNext()) {
@@ -54,7 +57,7 @@ public class Main {
 
     }
 
-    */
+
 
     private static void printActions(List actions) {
         for (int i = 0; i < actions.size(); i++) {

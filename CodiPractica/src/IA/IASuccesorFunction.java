@@ -40,13 +40,13 @@ public class IASuccesorFunction implements SuccessorFunction{
             ArrayList<Integer> centers = destinations.get(0);
             ArrayList<Integer> sensors = destinations.get(1);
 
-            System.out.println("The possible center destinations are:" + centers.size());
+            //System.out.println("The possible center destinations are:" + centers.size());
             for (int c = 0; c < centers.size(); ++c) {
                 IAState newState = new IAState(networkConf);
                 newState.changeConnection(i,centers.get(c)-IAState.getNumCenters());
                 retval.add(new Successor("Change connection",newState));
             }
-            System.out.println("The possible sensor destinations are:" +sensors.size());
+            //System.out.println("The possible sensor destinations are:" +sensors.size());
             for (int s = 0; s < sensors.size(); ++s) {
                 IAState newState = new IAState(networkConf);
                 newState.changeConnection(i,sensors.get(s));
