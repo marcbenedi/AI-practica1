@@ -167,35 +167,33 @@ public class IAState {
     private void updateFlow(Integer s, Double capacity) {
         //TODO: int capacity = parametre.intValue(); (per evitar tantes crides a intValue()).
         // Base case, I am in a sensor.
+        System.out.println("The capacity is: " + capacity);
+        System.out.println("Input flow "+inputFlow[s+numCenters]);
+        System.out.println("Nonrestricted flow "+inputFlow[s+numCenters]);
+        System.out.println(s);
         if (s >= 0) {
             //We don't exceed our collectedDataVolume
-            if(2* collectedDataVolume[s+numCenters] >= inputFlow[s + numCenters] + capacity.intValue()){
-                updateFlow(connectedTo[s], capacity);
-                inputFlow[s+numCenters] += capacity.intValue();
-            }
-            else {
-                //We exceed our collectedDataVolume, we send our collectedDataVolume
-                //Difference: My maximum output (3*myCollectedValue) - what is was sending you before.
-                //3*collectedDataVolume - (inputFlow + myCollectedDataValue)
-                //2*collectedDataVolumne - inputFlow
-                updateFlow(connectedTo[s], (double) 2*collectedDataVolume[s+numCenters] - inputFlow[s+numCenters]);
-                inputFlow[s+numCenters] = 2*collectedDataVolume[s+numCenters];
+            int previousInputFlow = inputFlow[s+numCenters];
+            nonRestricedInputFlow[s+numCenters] += capacity.intValue();
+
+            inputFlow[s+numCenters] = Math.min(2 * collectedDataVolume[s+numCenters], nonRestricedInputFlow[s+numCenters]);
+
+            double diff = inputFlow[s+numCenters] - previousInputFlow;
+
+            if (inputFlow[s+numCenters] != previousInputFlow){
+                System.out.println("Soc "+s+" i envio al "+connectedTo[s]+" que ha d'acutalitzar "+diff);
+                updateFlow(connectedTo[s], diff);
             }
         }
         // I am in a data center.
         else {
             //We don't exceed
-            if(maxFlowCenter >= inputFlow[s + numCenters] + capacity.intValue()){
-                inputFlow[s+numCenters] += capacity.intValue();
-            }
-            else{
-                inputFlow[s + numCenters] = maxFlowCenter;
-            }
+            nonRestricedInputFlow[s+numCenters] += capacity.intValue();
+            inputFlow[s+numCenters] = Math.min(maxFlowCenter, nonRestricedInputFlow[s+numCenters]);
         }
-        
         //In case that there has been an error
-        assert inputFlow[s+numCenters] < 0;
-        assert nonRestricedInputFlow[s+numCenters] < 0;
+        assert inputFlow[s+numCenters] >= 0;
+        assert nonRestricedInputFlow[s+numCenters] >= 0;
     }
 
     //Returns the index of the nearest NOT connected sensor.
@@ -508,9 +506,8 @@ public class IAState {
         //System.out.println("AAAAAAAAAAAAAA");
         //System.out.println(x);
         //System.out.println(y);
-        //TODO: Assert is not working. x = -1;
         assert x >= 0;
-        assert y >= 0;
+        assert y > 0;
         return x/y;
         //return computeArrivalData()/computeCost();
         //return computeCost()/computeArrivalData();
