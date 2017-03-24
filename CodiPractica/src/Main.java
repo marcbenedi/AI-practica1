@@ -17,10 +17,10 @@ public class Main {
         System.out.println("Createing IAState");
 
         IAState myState = new IAState();
-        myState.printState();
+//        myState.printState();
 
-        System.out.println("Calling the heuristic function - FOR TESTING PURPOSES");
-        System.out.println("The initial state heuristic value is = "+myState.heuristic1());
+//        System.out.println("Calling the heuristic function - FOR TESTING PURPOSES");
+//        System.out.println("The initial state heuristic value is = "+myState.heuristic1());
 
         // Create the Problem object
         Problem p = new  Problem(
@@ -35,22 +35,22 @@ public class Main {
         SearchAgent agent = new SearchAgent(p, alg);
 
         // We print the results of the search
-        System.out.println("We have found the best local solution");
+//        System.out.println("We have found the best local solution");
         // You can access also to the goal state using the
         // method getGoalState of class Search
         IAState fin = (IAState) alg.getGoalState();
-        System.out.println("The heuristic value for the solution state is = " + fin.heuristic1());
+        System.out.println("The heuristic (2) value for the solution state is = " + fin.heuristic2());
 
         //printActions(agent.getActions());
         printInstrumentation(agent.getInstrumentation());
 
-        System.out.println(fin.printTotalCostCalculation());
+//        System.out.println(fin.printTotalCostCalculation());
 
-        fin.printConnectedTo();
+//        fin.printConnectedTo();
 
-        fin.printDistanceMatrix();
+//        fin.printDistanceMatrix();
 
-        fin.printInputFlow();
+//        fin.printInputFlow();
     }
 
     private static void printInstrumentation(Properties properties) {

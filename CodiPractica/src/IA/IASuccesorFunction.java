@@ -16,6 +16,16 @@ public class IASuccesorFunction implements SuccessorFunction{
         // Add the states to retval as Succesor("flip i j, new state)
         // new_state has to be a copy of state
 
+        System.out.println("··· NEW STATE EXPANDED ···");
+        networkConf.printConnectedTo();
+        networkConf.printFlow();
+        networkConf.printPortionData();
+        networkConf.printNetworkCost();
+        networkConf.printHeuristic(1);
+        networkConf.printHeuristic(2);
+
+
+
         int mode = 1;
 
         switch (mode) {

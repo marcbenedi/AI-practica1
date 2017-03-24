@@ -10,6 +10,6 @@ public class IAHeuristicFunction implements HeuristicFunction {
 
     public double getHeuristicValue(Object n){
 
-        return ((IAState) n).heuristic1();
+        return ((IAState) n).heuristic2();
     }
 }

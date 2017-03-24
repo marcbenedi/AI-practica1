@@ -52,6 +52,7 @@ public class IAState {
     *
     * */
 
+    private static int dataEmitted;
     //Index from 0 to numCenters-1
     private static CentrosDatos centers;
     //Index from 0 to numSensors-1
@@ -135,9 +136,13 @@ public class IAState {
         }
 
 
+        int sc = 0;
         for (int i = 0; i < numSensors; ++i){
+            sc += collectedDataVolume[i+numCenters];
             System.out.println(collectedDataVolume[i+numCenters]);
         }
+        System.out.println("total data emitted: "+ sc);
+        dataEmitted = sc;
 
         initDistanceMatrix();
         //Generate the initial solution 1
@@ -406,7 +411,7 @@ public class IAState {
         // 4.- change destination collectedDataVolume
         // +(EN PRINCIPIO YA LO DEBERIA HACER updateFlow)
 
-        System.out.println("sensorMovingId: "+sensor_id+" destination: "+destination);
+//        System.out.println("sensorMovingId: "+sensor_id+" destination: "+destination);
 
         int previousConnection = connectedTo[sensor_id];
 
@@ -421,24 +426,26 @@ public class IAState {
 
         Double sensorOutputFlow  = inputFlow[numCenters+sensor_id]+sensors.get(sensor_id).getCapacidad();
 
-        System.out.println("-- Input flow previous connection before desconnection: " + inputFlow[numCenters+previousConnection]);
-        System.out.println("-- Non Restricted Input flow previous connection before desconnection: " + nonRestrictedInputFlow[numCenters+previousConnection]);
-
-
-        System.out.println("-- Input flow destination before connection: " + inputFlow[numCenters+destination]);
-        System.out.println("-- Non Restricted Input flow destination before connection: " + nonRestrictedInputFlow[numCenters+destination]);
-
+//        System.out.println("> sensorMovingOutputFlow: " + sensorOutputFlow);
+//
+//        System.out.println("-- Input flow previous connection before desconnection: " + inputFlow[numCenters+previousConnection]);
+//        System.out.println("-- Non Restricted Input flow previous connection before desconnection: " + nonRestrictedInputFlow[numCenters+previousConnection]);
+//
+//
+//        System.out.println("-- Input flow destination before connection: " + inputFlow[numCenters+destination]);
+//        System.out.println("-- Non Restricted Input flow destination before connection: " + nonRestrictedInputFlow[numCenters+destination]);
+//
 
         updateFlow(destination, sensorOutputFlow);
 
-        System.out.println("------- Input flow destination after connection: " + inputFlow[numCenters+destination]);
-        System.out.println("------- Non Restricted Input flow destination after connection: " + nonRestrictedInputFlow[numCenters+destination]);
-
+//        System.out.println("------- Input flow destination after connection: " + inputFlow[numCenters+destination]);
+//        System.out.println("------- Non Restricted Input flow destination after connection: " + nonRestrictedInputFlow[numCenters+destination]);
+//
 
         updateFlow(previousConnection, -sensorOutputFlow);
 
-        System.out.println("------- Input flow previous connection after connection: " + inputFlow[numCenters+previousConnection]);
-        System.out.println("------- Non Restricted Input flow previous connection after connection: " + nonRestrictedInputFlow[numCenters+previousConnection]);
+//        System.out.println("------- Input flow previous connection after connection: " + inputFlow[numCenters+previousConnection]);
+//        System.out.println("------- Non Restricted Input flow previous connection after connection: " + nonRestrictedInputFlow[numCenters+previousConnection]);
     }
 
     //------------------------------------2: SWAP CONNECTIONS-----------------------------------------------------------
@@ -497,12 +504,12 @@ public class IAState {
     }
 
     //-------------------------------------HEURISTIC FUNCTIONS----------------------------------------------------------
-    private int computeCost(){
+    private double computeCost(){
 
-        int sum = 0;
+        double sum = 0;
 
         for(int i = 0; i < numSensors; ++i) {
-            sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
+            sum +=  Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
         }
         return sum;
     }
@@ -510,7 +517,6 @@ public class IAState {
     private int computeArrivalData(){
 
         int sum = 0;
-
         for(int i = 0; i < numCenters; ++i)
             sum += inputFlow[i];
 
@@ -518,11 +524,15 @@ public class IAState {
         return sum;
     }
 
+    private double getProportionDataReceived() {
+        return ((double)computeArrivalData()) / ((double)dataEmitted);
+    }
+
     //min (cost/dades) ~= max(dades/cost)
     public double heuristic1() {
         //TODO: There is a overflow problem with the double variables.
         double x = computeArrivalData();
-        int y = computeCost();
+        double y = computeCost();
         //System.out.println("AAAAAAAAAAAAAA");
         //System.out.println(x);
         //System.out.println(y);
@@ -531,6 +541,21 @@ public class IAState {
         return x/y;
         //return computeArrivalData()/computeCost();
         //return computeCost()/computeArrivalData();
+    }
+
+    public double heuristic2() {
+        double arrivalData = computeArrivalData();
+        double networkCost = computeCost();
+
+        double Xd = arrivalData/(arrivalData+networkCost);
+        double Xc = networkCost/(arrivalData+networkCost);
+
+        double pesDeLesDadesSobreUn = 0.5;
+
+        double dataPond = pesDeLesDadesSobreUn/Xd;
+        double costPond = (1.0-pesDeLesDadesSobreUn)/Xc;
+
+        return -(arrivalData*dataPond - networkCost*costPond); //Negativo porque minimiza
     }
 
     //------------------------------------------DEBUGGING FUNCTIONS-----------------------------------------------------
@@ -552,10 +577,9 @@ public class IAState {
             System.out.print(connectedTo[i] + " ");
         }
         System.out.println();
-        System.out.println("---------------");
     }
 
-    public void printState(){
+    public void printState() {
         //100x100 geografic area
         for (double i = 0.0; i < 100.0; ++i){
             for(double j = 0.0; j < 100.0; ++j){
@@ -602,6 +626,34 @@ public class IAState {
         for(int i = 0 ; i < numSensors+ numCenters;++i) {
             System.out.println("Non Restricted Input flow de "+ (i-numCenters) + " es "+ nonRestrictedInputFlow[i]);
         }
+    }
+
+    public void printFlow() {
+        System.out.println("Flow (I/nR): ");
+        for(int i = 0 ; i < numSensors+ numCenters;++i) {
+            System.out.println((i-numCenters)+": "+inputFlow[i]+"/"+nonRestrictedInputFlow[i]);
+        }
+    }
+
+    public void printHeuristic(int i) {
+        switch (i) {
+            case 1:
+                System.out.println("H1 : "+ heuristic1());
+                break;
+            case 2:
+                System.out.println("H2 : "+ heuristic2());
+                break;
+            case 3:
+                assert false;
+        }
+    }
+
+    public void printPortionData() {
+        System.out.println("Portion data collected: "+ getProportionDataReceived());
+    }
+
+    public void printNetworkCost() {
+        System.out.println("Network Cost: "+ computeCost());
     }
 
 }
