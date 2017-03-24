@@ -14,8 +14,8 @@ public class IAState {
 
     //CONSTANTS (FINAL and also static) --------------------------------------------------------------------------------
 
-    private static final int numCenters = 14;
-    private static final int numSensors = 125;
+    private static final int numCenters = 10;
+    private static final int numSensors = 10;
     private static final int seed = 1234;
     private static final int maxFlowCenter = 125;
     private static final int inputMaxCenter = 25;
@@ -98,6 +98,15 @@ public class IAState {
         centers = new CentrosDatos(numCenters, seed);
         //Create the Sensores ArrayList with a random seed.
         sensors = new Sensores(numSensors, seed);
+
+        for(int i = 0; i < numCenters; ++i){
+            System.out.println("Centers "+ centers.get(i).getCoordX() + " "+centers.get(i).getCoordY());
+        }
+
+
+        for(int i = 0; i < numSensors; ++i){
+            System.out.println("Sensors "+ sensors.get(i).getCoordX() + " "+sensors.get(i).getCoordY());
+        }
 
         //Initializing the size of the arrays
         connectedTo = new int[numSensors];
@@ -277,12 +286,16 @@ public class IAState {
     private void initDistanceMatrix() {
         //Rows
         for (int i = 0; i < numSensors; ++i) {
-            //Columns
-            for (int j = 0; j < numCenters + numSensors; ++j) {
-                if (j < numCenters)
+            //Columns centers
+            for (int j = 0; j < numCenters; ++j) {
+                    System.out.print("Calculant distancia entre sensor " + i + " i centre " + j + ": ");
+                    System.out.println(calculateDistance(sensors.get(i), centers.get(j)));
                     distances[i][j] = calculateDistance(sensors.get(i), centers.get(j));
-                else
-                    distances[i][j] = calculateDistance(sensors.get(i), sensors.get(j - numCenters));
+            }
+            //Column sensors
+            for(int j = numCenters; j < numCenters+numSensors; ++j){
+                System.out.println("Calculant distancia entre sensor i sensor"+ i +" " + (j-numCenters));
+                distances[i][j] = calculateDistance(sensors.get(i),sensors.get(j-numCenters));
             }
         }
     }
@@ -294,6 +307,8 @@ public class IAState {
 
     //Calculate the distance between one sensor and one center
     private double calculateDistance(Sensor s, Centro c) {
+        System.out.println("Sensor coord: "+ s.getCoordX() + " " + s.getCoordY());
+        System.out.println("Center coord: "+ c.getCoordX() + " " + c.getCoordY());
         return sqrt(Math.pow((s.getCoordX() - c.getCoordX()), 2) + Math.pow((s.getCoordY() - c.getCoordY()), 2));
     }
 
@@ -524,6 +539,15 @@ public class IAState {
                     }
                 }
                 if(!found) System.out.print("·");
+            }
+            System.out.println();
+        }
+    }
+
+    public void printDistanceMatrix(){
+        for(int i = 0; i < numSensors; ++i){
+            for(int j = 0; j < numCenters+numSensors; ++j){
+                System.out.print(Math.round(distances[i][j])+" ");
             }
             System.out.println();
         }

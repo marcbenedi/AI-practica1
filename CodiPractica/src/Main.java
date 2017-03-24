@@ -45,6 +45,8 @@ public class Main {
         printInstrumentation(agent.getInstrumentation());
 
         System.out.println(fin.printTotalCostCalculation());
+
+        fin.printDistanceMatrix();
     }
 
     private static void printInstrumentation(Properties properties) {
