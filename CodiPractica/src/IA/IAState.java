@@ -74,7 +74,7 @@ public class IAState {
     private int[] inputConnections;
     // Size S + C
     private int[] inputFlow;
-    private int[] nonRestricedInputFlow;
+    private int[] nonRestrictedInputFlow;
     //Size S + C
     private int[] collectedDataVolume;
     //------------------------------------------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ public class IAState {
         connectedTo = new int[numSensors];
         inputConnections = new int[numSensors + numCenters];
         inputFlow = new int[numSensors + numCenters];
-        nonRestricedInputFlow = new int[numSensors + numCenters];
+        nonRestrictedInputFlow = new int[numSensors + numCenters];
         collectedDataVolume = new int[numSensors + numCenters];
         distances = new double[numSensors][numCenters + numSensors];
 
@@ -122,7 +122,7 @@ public class IAState {
             collectedDataVolume[i] = maxFlowCenter;
             inputConnections[i] = 0;
             inputFlow[i] = 0;
-            nonRestricedInputFlow[i] = 0;
+            nonRestrictedInputFlow[i] = 0;
         }
 
         //Initializing the value of the SENSORS [numCenters .. numCenters+numSensors] - shift = [0 .. numSensors]
@@ -131,7 +131,7 @@ public class IAState {
             connectedTo[i - numCenters] = notConnected;
             inputConnections[i] = 0;
             inputFlow[i] = 0;
-            nonRestricedInputFlow[i] = 0;
+            nonRestrictedInputFlow[i] = 0;
         }
 
 
@@ -154,7 +154,7 @@ public class IAState {
         this.inputConnections = state.inputConnections.clone();
         this.inputFlow = state.inputFlow.clone();
         this.collectedDataVolume = state.collectedDataVolume.clone();
-        this.nonRestricedInputFlow = state.nonRestricedInputFlow.clone();
+        this.nonRestrictedInputFlow = state.nonRestrictedInputFlow.clone();
     }
 
     public boolean is_goal() {
@@ -167,33 +167,33 @@ public class IAState {
     private void updateFlow(Integer s, Double capacity) {
         //TODO: int capacity = parametre.intValue(); (per evitar tantes crides a intValue()).
         // Base case, I am in a sensor.
-        System.out.println("The capacity is: " + capacity);
-        System.out.println("Input flow "+inputFlow[s+numCenters]);
-        System.out.println("Nonrestricted flow "+inputFlow[s+numCenters]);
-        System.out.println(s);
+//        System.out.println("The capacity is: " + capacity);
+//        System.out.println("Input flow "+inputFlow[s+numCenters]);
+//        System.out.println("Nonrestricted flow "+inputFlow[s+numCenters]);
+//        System.out.println(s);
         if (s >= 0) {
             //We don't exceed our collectedDataVolume
             int previousInputFlow = inputFlow[s+numCenters];
-            nonRestricedInputFlow[s+numCenters] += capacity.intValue();
+            nonRestrictedInputFlow[s+numCenters] += capacity.intValue();
 
-            inputFlow[s+numCenters] = Math.min(2 * collectedDataVolume[s+numCenters], nonRestricedInputFlow[s+numCenters]);
+            inputFlow[s+numCenters] = Math.min(2 * collectedDataVolume[s+numCenters], nonRestrictedInputFlow[s+numCenters]);
 
             double diff = inputFlow[s+numCenters] - previousInputFlow;
 
             if (inputFlow[s+numCenters] != previousInputFlow){
-                System.out.println("Soc "+s+" i envio al "+connectedTo[s]+" que ha d'acutalitzar "+diff);
+//                System.out.println("Soc "+s+" i envio al "+connectedTo[s]+" que ha d'acutalitzar "+diff);
                 updateFlow(connectedTo[s], diff);
             }
         }
         // I am in a data center.
         else {
             //We don't exceed
-            nonRestricedInputFlow[s+numCenters] += capacity.intValue();
-            inputFlow[s+numCenters] = Math.min(maxFlowCenter, nonRestricedInputFlow[s+numCenters]);
+            nonRestrictedInputFlow[s+numCenters] += capacity.intValue();
+            inputFlow[s+numCenters] = Math.min(maxFlowCenter, nonRestrictedInputFlow[s+numCenters]);
         }
         //In case that there has been an error
         assert inputFlow[s+numCenters] >= 0;
-        assert nonRestricedInputFlow[s+numCenters] >= 0;
+        assert nonRestrictedInputFlow[s+numCenters] >= 0;
     }
 
     //Returns the index of the nearest NOT connected sensor.
@@ -405,7 +405,11 @@ public class IAState {
         // 4.- change destination collectedDataVolume
         // +(EN PRINCIPIO YA LO DEBERIA HACER updateFlow)
 
+        System.out.println("sensorMovingId: "+sensor_id+" destination: "+destination);
+
         int previousConnection = connectedTo[sensor_id];
+
+        assert previousConnection != notConnected; //Always has to be connected to something
 
         inputConnections[numCenters+previousConnection] -= 1;
 
@@ -416,9 +420,24 @@ public class IAState {
 
         Double sensorOutputFlow  = inputFlow[numCenters+sensor_id]+sensors.get(sensor_id).getCapacidad();
 
+        System.out.println("-- Input flow previous connection before desconnection: " + inputFlow[numCenters+previousConnection]);
+        System.out.println("-- Non Restricted Input flow previous connection before desconnection: " + nonRestrictedInputFlow[numCenters+previousConnection]);
+
+
+        System.out.println("-- Input flow destination before connection: " + inputFlow[numCenters+destination]);
+        System.out.println("-- Non Restricted Input flow destination before connection: " + nonRestrictedInputFlow[numCenters+destination]);
+
+
         updateFlow(destination, sensorOutputFlow);
 
+        System.out.println("------- Input flow destination after connection: " + inputFlow[numCenters+destination]);
+        System.out.println("------- Non Restricted Input flow destination after connection: " + nonRestrictedInputFlow[numCenters+destination]);
+
+
         updateFlow(previousConnection, -sensorOutputFlow);
+
+        System.out.println("------- Input flow previous connection after connection: " + inputFlow[numCenters+previousConnection]);
+        System.out.println("------- Non Restricted Input flow previous connection after connection: " + nonRestrictedInputFlow[numCenters+previousConnection]);
     }
 
     //------------------------------------2: SWAP CONNECTIONS-----------------------------------------------------------
@@ -573,8 +592,14 @@ public class IAState {
     }
 
     public void printInputFlow(){
-        for(int i = 0 ; i < numSensors+ numCenters;++i){
+        for(int i = 0 ; i < numSensors+ numCenters;++i) {
             System.out.println("Input flow de "+ (i-numCenters) + " es "+inputFlow[i]);
+        }
+    }
+
+    public void printNonRestrictedInputFlow() {
+        for(int i = 0 ; i < numSensors+ numCenters;++i) {
+            System.out.println("Non Restricted Input flow de "+ (i-numCenters) + " es "+ nonRestrictedInputFlow[i]);
         }
     }
 
