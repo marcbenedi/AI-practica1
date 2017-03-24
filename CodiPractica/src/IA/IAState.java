@@ -251,6 +251,7 @@ public class IAState {
                     this_level.add(s);
                     inputConnections[numCenters + index_c] += 1;
                     inputFlow[numCenters + index_c] += sensors.get(s).getCapacidad();
+                    nonRestrictedInputFlow[numCenters + index_c] += sensors.get(s).getCapacidad();
                 }
                 s = volumeDistanceOrderedSensorsPerCenter.get(numCenters + index_c).poll();
             }
