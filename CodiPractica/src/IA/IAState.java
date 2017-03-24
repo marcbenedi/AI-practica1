@@ -14,8 +14,8 @@ public class IAState {
 
     //CONSTANTS (FINAL and also static) --------------------------------------------------------------------------------
 
-    private static final int numCenters = 10;
-    private static final int numSensors = 10;
+    private static final int numCenters = 1;
+    private static final int numSensors = 5;
     private static final int seed = 1234;
     private static final int maxFlowCenter = 125;
     private static final int inputMaxCenter = 25;
@@ -74,6 +74,7 @@ public class IAState {
     private int[] inputConnections;
     // Size S + C
     private int[] inputFlow;
+    private int[] nonRestricedInputFlow;
     //Size S + C
     private int[] collectedDataVolume;
     //------------------------------------------------------------------------------------------------------------------
@@ -99,19 +100,20 @@ public class IAState {
         //Create the Sensores ArrayList with a random seed.
         sensors = new Sensores(numSensors, seed);
 
-        for(int i = 0; i < numCenters; ++i){
+        /*for(int i = 0; i < numCenters; ++i){
             System.out.println("Centers "+ centers.get(i).getCoordX() + " "+centers.get(i).getCoordY());
         }
 
 
         for(int i = 0; i < numSensors; ++i){
             System.out.println("Sensors "+ sensors.get(i).getCoordX() + " "+sensors.get(i).getCoordY());
-        }
+        }*/
 
         //Initializing the size of the arrays
         connectedTo = new int[numSensors];
         inputConnections = new int[numSensors + numCenters];
         inputFlow = new int[numSensors + numCenters];
+        nonRestricedInputFlow = new int[numSensors + numCenters];
         collectedDataVolume = new int[numSensors + numCenters];
         distances = new double[numSensors][numCenters + numSensors];
 
@@ -120,6 +122,7 @@ public class IAState {
             collectedDataVolume[i] = maxFlowCenter;
             inputConnections[i] = 0;
             inputFlow[i] = 0;
+            nonRestricedInputFlow[i] = 0;
         }
 
         //Initializing the value of the SENSORS [numCenters .. numCenters+numSensors] - shift = [0 .. numSensors]
@@ -128,6 +131,12 @@ public class IAState {
             connectedTo[i - numCenters] = notConnected;
             inputConnections[i] = 0;
             inputFlow[i] = 0;
+            nonRestricedInputFlow[i] = 0;
+        }
+
+
+        for (int i = 0; i < numSensors; ++i){
+            System.out.println(collectedDataVolume[i+numCenters]);
         }
 
         initDistanceMatrix();
@@ -145,6 +154,7 @@ public class IAState {
         this.inputConnections = state.inputConnections.clone();
         this.inputFlow = state.inputFlow.clone();
         this.collectedDataVolume = state.collectedDataVolume.clone();
+        this.nonRestricedInputFlow = state.nonRestricedInputFlow.clone();
     }
 
     public boolean is_goal() {
@@ -182,8 +192,10 @@ public class IAState {
                 inputFlow[s + numCenters] = maxFlowCenter;
             }
         }
+        
         //In case that there has been an error
         assert inputFlow[s+numCenters] < 0;
+        assert nonRestricedInputFlow[s+numCenters] < 0;
     }
 
     //Returns the index of the nearest NOT connected sensor.
@@ -288,13 +300,13 @@ public class IAState {
         for (int i = 0; i < numSensors; ++i) {
             //Columns centers
             for (int j = 0; j < numCenters; ++j) {
-                    System.out.print("Calculant distancia entre sensor " + i + " i centre " + j + ": ");
-                    System.out.println(calculateDistance(sensors.get(i), centers.get(j)));
+                    //System.out.print("Calculant distancia entre sensor " + i + " i centre " + j + ": ");
+                    //System.out.println(calculateDistance(sensors.get(i), centers.get(j)));
                     distances[i][j] = calculateDistance(sensors.get(i), centers.get(j));
             }
             //Column sensors
             for(int j = numCenters; j < numCenters+numSensors; ++j){
-                System.out.println("Calculant distancia entre sensor i sensor"+ i +" " + (j-numCenters));
+                //System.out.println("Calculant distancia entre sensor i sensor"+ i +" " + (j-numCenters));
                 distances[i][j] = calculateDistance(sensors.get(i),sensors.get(j-numCenters));
             }
         }
@@ -307,8 +319,8 @@ public class IAState {
 
     //Calculate the distance between one sensor and one center
     private double calculateDistance(Sensor s, Centro c) {
-        System.out.println("Sensor coord: "+ s.getCoordX() + " " + s.getCoordY());
-        System.out.println("Center coord: "+ c.getCoordX() + " " + c.getCoordY());
+        //System.out.println("Sensor coord: "+ s.getCoordX() + " " + s.getCoordY());
+        //System.out.println("Center coord: "+ c.getCoordX() + " " + c.getCoordY());
         return sqrt(Math.pow((s.getCoordX() - c.getCoordX()), 2) + Math.pow((s.getCoordY() - c.getCoordY()), 2));
     }
 
@@ -510,10 +522,20 @@ public class IAState {
         System.out.println("INI CALCULPRINT");
         for(int i = 0; i < numSensors; ++i) {
             System.out.println("la distancia és de " +distances[i][connectedTo[i] + numCenters]+ " entre "+ i + " "+ connectedTo[i]);
+            System.out.println("I el seu cost és de "+Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad()) );
             sum += Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
             System.out.println("sum = " + sum);
         }
         return sum;
+    }
+
+    public void printConnectedTo(){
+        System.out.println("Connected to :");
+        for (int i = 0; i < numSensors; ++i){
+            System.out.print(connectedTo[i] + " ");
+        }
+        System.out.println();
+        System.out.println("---------------");
     }
 
     public void printState(){
@@ -550,6 +572,12 @@ public class IAState {
                 System.out.print(Math.round(distances[i][j])+" ");
             }
             System.out.println();
+        }
+    }
+
+    public void printInputFlow(){
+        for(int i = 0 ; i < numSensors+ numCenters;++i){
+            System.out.println("Input flow de "+ (i-numCenters) + " es "+inputFlow[i]);
         }
     }
 

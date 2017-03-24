@@ -46,7 +46,11 @@ public class Main {
 
         System.out.println(fin.printTotalCostCalculation());
 
+        fin.printConnectedTo();
+
         fin.printDistanceMatrix();
+
+        fin.printInputFlow();
     }
 
     private static void printInstrumentation(Properties properties) {
