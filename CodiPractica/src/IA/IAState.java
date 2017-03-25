@@ -14,9 +14,10 @@ public class IAState {
 
     //CONSTANTS (FINAL and also static) --------------------------------------------------------------------------------
 
-    private static final int numCenters = 4;
-    private static final int numSensors = 100;
-    private static final int seed = 1234;
+    private static final int numCenters = 1;
+    private static final int numSensors = 5;
+    private static final int seed_c = 1234;
+    private static final int seed_s = 4321;
     private static final int maxFlowCenter = 125;
     private static final int inputMaxCenter = 25;
     private static final int inputMaxSensor = 3;
@@ -97,9 +98,9 @@ public class IAState {
 
         //Initializing the problem with IA.Red input
         //Create the CentroDatos ArrayList with a random seed.
-        centers = new CentrosDatos(numCenters, seed);
+        centers = new CentrosDatos(numCenters, seed_c);
         //Create the Sensores ArrayList with a random seed.
-        sensors = new Sensores(numSensors, seed);
+        sensors = new Sensores(numSensors, seed_s);
 
         /*for(int i = 0; i < numCenters; ++i){
             System.out.println("Centers "+ centers.get(i).getCoordX() + " "+centers.get(i).getCoordY());
@@ -146,7 +147,9 @@ public class IAState {
 
         initDistanceMatrix();
         //Generate the initial solution 1
-        generarSolucioInicial1();
+        //generarSolucioInicial1();
+        //Generate the initial solution 2
+        generarSolucioInicial2();
 
     }
 
@@ -185,7 +188,9 @@ public class IAState {
 
             double diff = inputFlow[s+numCenters] - previousInputFlow;
 
-            if (inputFlow[s+numCenters] != previousInputFlow){
+            //If there is a change in the flow
+            //Marc: And we are connected to something
+            if (inputFlow[s+numCenters] != previousInputFlow && connectedTo[s] != notConnected){
 //                System.out.println("Soc "+s+" i envio al "+connectedTo[s]+" que ha d'acutalitzar "+diff);
                 updateFlow(connectedTo[s], diff);
             }
@@ -226,6 +231,17 @@ public class IAState {
                 volumeDistanceOrderedSensorsPerCenter.get(index_center).add(i);
             }
             ++index_center;
+        }
+    }
+
+    //For all sensor_id > 0 : connectedTo[sensor_id]=sensor_id-1. connectedTo[0]=-1 (the last datacenter).
+    private void generarSolucioInicial2(){
+        for(int i = numSensors-1; i >= 0; --i){
+            System.out.println("Connectem " + i + " a "+(i-1));
+            connectedTo[i] = i -1;
+            inputConnections[i-1 + numCenters] += 1;
+            //We send to the next sensour our collectedDataVolume + our input Flow
+            updateFlow(connectedTo[i], (double) collectedDataVolume[i+numCenters] + inputFlow[i+numCenters]);
         }
     }
 
@@ -552,23 +568,18 @@ public class IAState {
     }
 
     public double heuristic2() {
-        double proportionDataReceived = getProportionDataReceived(); //Between 0 and 1
-        double networkCost = computeCost(); //Del orden de 25 000
+        double arrivalData = computeArrivalData();
+        double networkCost = computeCost();
 
-        //Podemos decir que perder un punto porcentual de los datos emitidos importa igual que 1000 unidades de coste (arbitrariamente)
+        double Xd = arrivalData/(arrivalData+networkCost);
+        double Xc = networkCost/(arrivalData+networkCost);
 
-//        double Xd = arrivalData/(arrivalData+networkCost);
-//        double Xc = networkCost/(arrivalData+networkCost);
+        double pesDeLesDadesSobreUn = 0.5;
 
-//        double pesDeLesDadesSobreUn = 0.3;
+        double dataPond = pesDeLesDadesSobreUn/Xd;
+        double costPond = (1.0-pesDeLesDadesSobreUn)/Xc;
 
-//        double dataPond = pesDeLesDadesSobreUn/Xd;
-//        double costPond = (1.0-pesDeLesDadesSobreUn)/Xc;
-
-        double costPond = 0.1;
-        double dataPond = 35000;
-
-        return networkCost*costPond - proportionDataReceived*dataPond ; //Negativo porque minimiza
+        return -(arrivalData*dataPond - networkCost*costPond); //Negativo porque minimiza
     }
 
     //------------------------------------------DEBUGGING FUNCTIONS-----------------------------------------------------
