@@ -17,11 +17,11 @@ public class IASuccesorFunction implements SuccessorFunction{
         // new_state has to be a copy of state
 
         System.out.println("··· NEW STATE EXPANDED ···");
-        networkConf.printConnectedTo();
-        networkConf.printFlow();
+//        networkConf.printConnectedTo();
+//        networkConf.printFlow();
         networkConf.printPortionData();
         networkConf.printNetworkCost();
-        networkConf.printHeuristic(1);
+//        networkConf.printHeuristic(1);
         networkConf.printHeuristic(2);
 
 

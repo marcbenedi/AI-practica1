@@ -14,8 +14,8 @@ public class IAState {
 
     //CONSTANTS (FINAL and also static) --------------------------------------------------------------------------------
 
-    private static final int numCenters = 1;
-    private static final int numSensors = 5;
+    private static final int numCenters = 4;
+    private static final int numSensors = 100;
     private static final int seed = 1234;
     private static final int maxFlowCenter = 125;
     private static final int inputMaxCenter = 25;
@@ -552,18 +552,23 @@ public class IAState {
     }
 
     public double heuristic2() {
-        double arrivalData = computeArrivalData();
-        double networkCost = computeCost();
+        double proportionDataReceived = getProportionDataReceived(); //Between 0 and 1
+        double networkCost = computeCost(); //Del orden de 25 000
 
-        double Xd = arrivalData/(arrivalData+networkCost);
-        double Xc = networkCost/(arrivalData+networkCost);
+        //Podemos decir que perder un punto porcentual de los datos emitidos importa igual que 1000 unidades de coste (arbitrariamente)
 
-        double pesDeLesDadesSobreUn = 0.5;
+//        double Xd = arrivalData/(arrivalData+networkCost);
+//        double Xc = networkCost/(arrivalData+networkCost);
 
-        double dataPond = pesDeLesDadesSobreUn/Xd;
-        double costPond = (1.0-pesDeLesDadesSobreUn)/Xc;
+//        double pesDeLesDadesSobreUn = 0.3;
 
-        return -(arrivalData*dataPond - networkCost*costPond); //Negativo porque minimiza
+//        double dataPond = pesDeLesDadesSobreUn/Xd;
+//        double costPond = (1.0-pesDeLesDadesSobreUn)/Xc;
+
+        double costPond = 0.1;
+        double dataPond = 35000;
+
+        return networkCost*costPond - proportionDataReceived*dataPond ; //Negativo porque minimiza
     }
 
     //------------------------------------------DEBUGGING FUNCTIONS-----------------------------------------------------
