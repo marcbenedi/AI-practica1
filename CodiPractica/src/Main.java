@@ -14,7 +14,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        System.out.println("Createing IAState");
+        long millis = System.currentTimeMillis();
+
+
 
         IAState myState = new IAState();
 //        myState.printState();
@@ -32,6 +34,9 @@ public class Main {
         // Instantiate the search algorithm
         Search alg = new HillClimbingSearch();
         // Instantiate the SearchAgent object
+
+        System.out.println("Creating IAState");
+
         SearchAgent agent = new SearchAgent(p, alg);
 
         // We print the results of the search
@@ -40,6 +45,10 @@ public class Main {
         // method getGoalState of class Search
         IAState fin = (IAState) alg.getGoalState();
         System.out.println("The heuristic (2) value for the solution state is = " + fin.heuristic2());
+
+        long m2 = System.currentTimeMillis();
+
+        System.out.println("Elapsed time: "+(m2-millis));
 
         //printActions(agent.getActions());
         printInstrumentation(agent.getInstrumentation());

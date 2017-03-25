@@ -14,14 +14,17 @@ public class IAState {
 
     //CONSTANTS (FINAL and also static) --------------------------------------------------------------------------------
 
-    private static final int numCenters = 1;
-    private static final int numSensors = 5;
+    private static final int numCenters = 4;
+    private static final int numSensors = 100;
     private static final int seed_c = 1234;
     private static final int seed_s = 4321;
     private static final int maxFlowCenter = 125;
     private static final int inputMaxCenter = 25;
     private static final int inputMaxSensor = 3;
     private static final int notConnected = -numCenters-1;
+
+
+    private static final int modeGenerationInitial = 1;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -140,16 +143,26 @@ public class IAState {
         int sc = 0;
         for (int i = 0; i < numSensors; ++i){
             sc += collectedDataVolume[i+numCenters];
-            System.out.println(collectedDataVolume[i+numCenters]);
+//            System.out.println(collectedDataVolume[i+numCenters]);
         }
         System.out.println("total data emitted: "+ sc);
         dataEmitted = sc;
 
         initDistanceMatrix();
         //Generate the initial solution 1
-        //generarSolucioInicial1();
+        switch (modeGenerationInitial) {
+            case 1:
+                generarSolucioInicial1();
+                break;
+            case 2:
+                generarSolucioInicial2();
+                break;
+            default:
+                assert false;
+        }
+
         //Generate the initial solution 2
-        generarSolucioInicial2();
+//        generarSolucioInicial2();
 
     }
 
@@ -237,7 +250,7 @@ public class IAState {
     //For all sensor_id > 0 : connectedTo[sensor_id]=sensor_id-1. connectedTo[0]=-1 (the last datacenter).
     private void generarSolucioInicial2(){
         for(int i = numSensors-1; i >= 0; --i){
-            System.out.println("Connectem " + i + " a "+(i-1));
+//            System.out.println("Connectem " + i + " a "+(i-1));
             connectedTo[i] = i -1;
             inputConnections[i-1 + numCenters] += 1;
             //We send to the next sensour our collectedDataVolume + our input Flow
@@ -414,8 +427,12 @@ public class IAState {
         for (int i = 0; i < numSensors; ++i) {
             //If I'm connected to sensor_id
             if (connectedTo[i] == sensor_id) {
+//                System.out.println("-- sensor "+i+" was added");
                 depending.add(i);
-                depending.addAll(dependingSensors(i));
+                HashSet<Integer> dependingOfI = dependingSensors(i);
+                for (Integer d: dependingOfI) {
+                    depending.add(d);
+                }
             }
         }
         return depending;
@@ -475,10 +492,21 @@ public class IAState {
     //the sensor with the lower id
     public HashSet<ArrayList<Integer>> getAllNonDependantPairsOfSensors() {
         ArrayList<ArrayList<Integer>> pairs = new ArrayList<>();
+        ArrayList<HashSet<Integer>> sensorDependencies = new ArrayList<>();
         for (int i = 0; i < numSensors; ++i) {
-            HashSet<Integer> dependant = dependingSensors(i);
+            sensorDependencies.add(dependingSensors(i));
+        }
+
+        for (int i = 0; i < numSensors; ++i) {
+//            System.out.println("Catching depending sensors of sensor" + i);
+//            HashSet<Integer> dependant = dependingSensors(i);
+//            System.out.println("Depending sensors de "+ i+ ": "+ sensorDependencies.get(i).size());
+//            for (Integer d: dependant) {
+//                System.out.println(d);
+//            }
             for (int j = 0; j < numSensors; ++j) {
-                if (!dependant.contains(j) && i != j) {
+                if (i != j && !sensorDependencies.get(i).contains(j) && !sensorDependencies.get(j).contains(i)) {
+//                    System.out.println("Entro en if con i: "+i+" , j: "+j);
                     ArrayList<Integer> pair = new ArrayList<>();
                     if (i < j) {
                         pair.add(i);
@@ -490,6 +518,9 @@ public class IAState {
                     }
                     pairs.add(pair);
                 }
+//                else {
+//                    System.out.println("Entro en else con i: "+i+" , j: "+j);
+//                }
             }
         }
         return new HashSet<>(pairs);
@@ -501,6 +532,8 @@ public class IAState {
         // 0.- Change both connectedTo
         // 1.- Update flow on both
 
+//        System.out.println("Sensors to be exchanged: "+sensor_id_1 + " and "+sensor_id_2);
+
         //TODO: Maybe it can be done with changeConnection()
         //Problem: If all the sensors are full we can not disconnect and then connect to the other before disconnecting
         //the other.
@@ -511,8 +544,12 @@ public class IAState {
         connectedTo[sensor_id_1] = previousConnectionSensor2;
         connectedTo[sensor_id_2] = previousConnectionSensor1;
 
-        Sensor sensor1 = sensors.get(sensor_id_1);
-        Sensor sensor2 = sensors.get(sensor_id_2);
+//        System.out.println("Sensor : "+sensor_id_1 + " is now connected to "+ connectedTo[sensor_id_1]);
+//        System.out.println("Sensor : "+sensor_id_2 + " is now connected to "+ connectedTo[sensor_id_2]);
+
+
+//        Sensor sensor1 = sensors.get(sensor_id_1);
+//        Sensor sensor2 = sensors.get(sensor_id_2);
 
         //Double sensorOneOutputFlow = inputFlow[numCenters+sensor_id_1]+sensor1.getCapacidad();
         Double sensorOneOutputFlow = inputFlow[numCenters+sensor_id_1]+(double) collectedDataVolume[sensor_id_1+numCenters];
@@ -532,8 +569,8 @@ public class IAState {
         double sum = 0;
 
         for(int i = 0; i < numSensors; ++i) {
-            //sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
-            sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + collectedDataVolume[i+numCenters]);
+//            sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + collectedDataVolume[i+numCenters]);
+            sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (nonRestrictedInputFlow[i + numCenters] + collectedDataVolume[i+numCenters]);
         }
         return sum;
     }
@@ -567,20 +604,37 @@ public class IAState {
         //return computeCost()/computeArrivalData();
     }
 
-    public double heuristic2() {
+    public double heuristicCost() {
         double arrivalData = computeArrivalData();
         double networkCost = computeCost();
 
-        double Xd = arrivalData/(arrivalData+networkCost);
-        double Xc = networkCost/(arrivalData+networkCost);
-
-        double pesDeLesDadesSobreUn = 0.5;
-
-        double dataPond = pesDeLesDadesSobreUn/Xd;
-        double costPond = (1.0-pesDeLesDadesSobreUn)/Xc;
+        double dataPond = 0;
+        double costPond = 1;
 
         return -(arrivalData*dataPond - networkCost*costPond); //Negativo porque minimiza
     }
+
+    public double heuristic2() {
+        double proportionDataReceived = getProportionDataReceived(); //Between 0 and 1
+        double networkCost = computeCost(); //Del orden de 25 000
+
+        //Podemos decir que perder un punto porcentual de los datos emitidos importa igual que 1000 unidades de coste (arbitrariamente)
+
+//        double Xd = arrivalData/(arrivalData+networkCost);
+//        double Xc = networkCost/(arrivalData+networkCost);
+
+//        double pesDeLesDadesSobreUn = 0.3;
+
+//        double dataPond = pesDeLesDadesSobreUn/Xd;
+//        double costPond = (1.0-pesDeLesDadesSobreUn)/Xc;
+
+        double costPond = 0.1;
+//        double dataPond = 35000;
+        double dataPond = 35000;
+
+        return networkCost*costPond - proportionDataReceived*dataPond ; //Negativo porque minimiza
+    }
+
 
     //------------------------------------------DEBUGGING FUNCTIONS-----------------------------------------------------
     public int printTotalCostCalculation(){
@@ -669,6 +723,9 @@ public class IAState {
                 System.out.println("H2 : "+ heuristic2());
                 break;
             case 3:
+                System.out.println("HC : "+ heuristicCost());
+                break;
+            default:
                 assert false;
         }
     }
