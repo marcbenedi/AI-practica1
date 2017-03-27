@@ -64,6 +64,8 @@ public class IAState {
     private static Sensores sensors;
     //Distance matrix. Rows = numSensors, Columns = numCenter + numSensors. (The first columns reference centers)
     private static double[][] distances;
+    //Size S + C
+    private static int[] collectedDataVolume;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -80,9 +82,6 @@ public class IAState {
     // Size S + C
     private int[] inputFlow;
     private int[] nonRestrictedInputFlow;
-    //Size S + C
-    //TODO: collectedDataVolumne no hauria de ser static?
-    private int[] collectedDataVolume;
     //------------------------------------------------------------------------------------------------------------------
 
 
