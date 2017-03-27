@@ -55,8 +55,7 @@ public class IAState {
     * in the DS sensors
     *
     * */
-
-    //TODO: Que es dataEmitted, no ha de ser per aixo les variables estatiques.
+    //Total amount of data that sensors are collecting.
     private static int dataEmitted;
     //Index from 0 to numCenters-1
     private static CentrosDatos centers;
