@@ -56,6 +56,7 @@ public class IAState {
     *
     * */
 
+    //TODO: Que es dataEmitted, no ha de ser per aixo les variables estatiques.
     private static int dataEmitted;
     //Index from 0 to numCenters-1
     private static CentrosDatos centers;
@@ -74,13 +75,13 @@ public class IAState {
     // -C <= value <= S-1
     // Size = S
     private int[] connectedTo;
-
     // Size S + C
     private int[] inputConnections;
     // Size S + C
     private int[] inputFlow;
     private int[] nonRestrictedInputFlow;
     //Size S + C
+    //TODO: collectedDataVolumne no hauria de ser static?
     private int[] collectedDataVolume;
     //------------------------------------------------------------------------------------------------------------------
 
