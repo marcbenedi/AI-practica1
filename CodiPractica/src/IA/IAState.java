@@ -14,17 +14,17 @@ public class IAState {
 
     //CONSTANTS (FINAL and also static) --------------------------------------------------------------------------------
 
-    private static final int numCenters = 4;
-    private static final int numSensors = 100;
-    private static final int seed_c = 1234;
-    private static final int seed_s = 4321;
+    private static int numCenters;
+    private static int numSensors;
+    private static int seed_c;
+    private static int seed_s;
     private static final int maxFlowCenter = 125;
     private static final int inputMaxCenter = 25;
     private static final int inputMaxSensor = 3;
-    private static final int notConnected = -numCenters-1;
+    private static int notConnected;
 
 
-    private static final int modeGenerationInitial = 1;
+    private static int modeGenerationInitial;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -96,13 +96,21 @@ public class IAState {
     }
 
     /* Constructor */
-    public IAState() {
+    public IAState(int num_c, int num_s, int seed_c, int seed_s, int gen_id) {
 
+        //Setting constants
+        numCenters = num_c;
+        numSensors = num_s;
+        this.seed_c = seed_c;
+        this.seed_s = seed_s;
+        modeGenerationInitial = gen_id;
+        notConnected = -num_c-1;
+        
         //Initializing the problem with IA.Red input
         //Create the CentroDatos ArrayList with a random seed.
-        centers = new CentrosDatos(numCenters, seed_c);
+        centers = new CentrosDatos(numCenters, IAState.seed_c);
         //Create the Sensores ArrayList with a random seed.
-        sensors = new Sensores(numSensors, seed_s);
+        sensors = new Sensores(numSensors, IAState.seed_s);
 
         //Initializing the size of the arrays
         connectedTo = new int[numSensors];

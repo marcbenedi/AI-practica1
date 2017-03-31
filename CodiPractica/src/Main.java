@@ -25,12 +25,12 @@ public class Main {
 
         long millis = System.currentTimeMillis();
 
-        IAState myState = new IAState();
+        IAState myState = new IAState(num_c,num_s,seed_c,seed_s,gen_id);
 
         // Create the Problem object
         Problem p = new  Problem(
                 myState,
-                new IASuccesorFunction(),
+                new IASuccesorFunction(op_id),
                 new ProbIA5GoalTest(),
                 new IAHeuristicFunction());
 

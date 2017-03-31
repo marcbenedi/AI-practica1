@@ -9,14 +9,18 @@ import java.util.List;
 
 public class IASuccesorFunction implements SuccessorFunction{
 
+    private static int mode;
+
+    public IASuccesorFunction(int op_id) {
+        mode = op_id;
+    }
+
     public List getSuccessors(Object state){
         IAState networkConf = (IAState) state;
 
         // Apply the selected (mode) operator and generate new states
         // Add the states to retval as Succesor("flip i j, new state)
         // new_state has to be a copy of state
-
-        int mode = 3;
 
         switch (mode) {
             case 1:
