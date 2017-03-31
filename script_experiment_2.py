@@ -11,7 +11,7 @@ seed_s = 4321
 num_c = 4
 num_s = 100
 
-operant_id = 3
+operant_id = 1
 initial_solution_id = 1
 
 program = []
@@ -70,14 +70,31 @@ for rep in range(10):
         listaExpanded[op-1].append(eval(listaCsv[-1][0]))
 
 plt.boxplot(listaHeurist)
-plt.savefig('./experiment2/heuristic.png')
+plt.suptitle('Heuristic')
+plt.autoscale()
+plt.xticks([1,2],['Estrategia greedy','Connectats en linia'])
+plt.xlabel('Estrategia solucio inicial')
+plt.ylabel('Valor heuristic')
+plt.savefig('./experiment2/heuristic.png',bbox_inches='tight')
 plt.clf()
 plt.boxplot(listaCoste)
-plt.savefig('./experiment2/coste.png')
+plt.suptitle('Cost')
+plt.xticks([1,2],['Estrategia greedy','Connectats en linia'])
+plt.xlabel('Estrategia solucio inicial')
+plt.ylabel('Cost de la xarxa')
+plt.savefig('./experiment2/coste.png',bbox_inches='tight')
 plt.clf()
 plt.boxplot(listaDatos)
-plt.savefig('./experiment2/datos.png')
+plt.suptitle('Dades rebudes (respecte el total que es recull)')
+plt.xticks([1,2],['Estrategia greedy','Connectats en linia'])
+plt.xlabel('Estrategia solucio inicial')
+plt.ylabel('Dades rebudes')
+plt.savefig('./experiment2/datos.png',bbox_inches='tight')
 plt.clf()
 plt.boxplot(listaMilis)
-plt.savefig('./experiment2/tiempo.png')
+plt.suptitle('Temps')
+plt.xticks([1,2],['Estrategia greedy','Connectats en linia'])
+plt.xlabel('Estrategia solucio inicial')
+plt.ylabel('ms')
+plt.savefig('./experiment2/tiempo.png',bbox_inches='tight')
 plt.clf()
