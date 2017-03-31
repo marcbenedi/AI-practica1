@@ -50,10 +50,11 @@ listaDatos = [[],[],[]]
 listaMilis = [[],[],[]]
 listaExpanded= [[],[],[]]
 
+REPS = 10
 
-for rep in range(10):
-    program[5] = str(seeds_c[rep])
-    program[6] = str(seeds_s[rep])
+for rep in range(REPS):
+    program[5] = str(rep*10)
+    program[6] = str(rep*20)
     for op in range(1,4):
         program[-2] = str(op)
         output = subprocess.Popen(program, stdout=subprocess.PIPE).communicate()[0]
@@ -77,4 +78,7 @@ plt.savefig('./experiment1/coste.png')
 plt.clf()
 plt.boxplot(listaDatos)
 plt.savefig('./experiment1/datos.png')
+plt.clf()
+plt.boxplot(listaMilis)
+plt.savefig('./experiment1/tiempo.png')
 plt.clf()
