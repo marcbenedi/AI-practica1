@@ -105,7 +105,7 @@ public class IAState {
         this.seed_s = seed_s;
         modeGenerationInitial = gen_id;
         notConnected = -num_c-1;
-        
+
         //Initializing the problem with IA.Red input
         //Create the CentroDatos ArrayList with a random seed.
         centers = new CentrosDatos(numCenters, IAState.seed_c);
@@ -142,7 +142,7 @@ public class IAState {
         for (int i = 0; i < numSensors; ++i){
             sc += collectedDataVolume[i+numCenters];
         }
-        System.out.println("total data emitted: "+ sc);
+        //System.out.println("total data emitted: "+ sc);
         dataEmitted = sc;
 
         initDistanceMatrix();
@@ -653,6 +653,11 @@ public class IAState {
 
     public void printNetworkCost() {
         System.out.println("Network Cost: "+ computeCost());
+    }
+
+    //Porcentage de datos, coste de la red, valor heuristico
+    public void printStateCSV() {
+        System.out.println(getProportionDataReceived()+","+computeCost()+","+heuristic2());
     }
 
 }

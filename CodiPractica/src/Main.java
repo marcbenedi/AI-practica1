@@ -20,8 +20,8 @@ public class Main {
         int seed_s = Integer.parseInt(args[3]);
         int op_id = Integer.parseInt(args[4]);
         int gen_id = Integer.parseInt(args[5]);
-        System.out.println("These are the arguments of the program: " + num_c + " " + num_s + " " +
-                seed_c + " " + seed_s + " " + op_id + " " + gen_id );
+        //System.out.println("These are the arguments of the program: " + num_c + " " + num_s + " " +
+        //        seed_c + " " + seed_s + " " + op_id + " " + gen_id );
 
         long millis = System.currentTimeMillis();
 
@@ -43,22 +43,22 @@ public class Main {
         // You can access also to the goal state using the
         // method getGoalState of class Search
         IAState fin = (IAState) alg.getGoalState();
-        System.out.println("The heuristic (2) value for the solution state is = " + fin.heuristic2());
+        //System.out.println("The heuristic (2) value for the solution state is = " + fin.heuristic2());
 
         long m2 = System.currentTimeMillis();
 
-        System.out.println("Elapsed time: "+(m2-millis));
+        System.out.println((m2-millis));
 
         printInstrumentation(agent.getInstrumentation());
     }
 
     private static void printInstrumentation(Properties properties) {
-        System.out.println("Instrumentation:");
+        //System.out.println("Instrumentation:");
         Iterator keys = properties.keySet().iterator();
         while (keys.hasNext()) {
             String key = (String) keys.next();
             String property = properties.getProperty(key);
-            System.out.println(key + " : " + property);
+            System.out.println(/*key + " : " +*/ property);
         }
     }
 
