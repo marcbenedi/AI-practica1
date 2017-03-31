@@ -104,15 +104,6 @@ public class IAState {
         //Create the Sensores ArrayList with a random seed.
         sensors = new Sensores(numSensors, seed_s);
 
-        /*for(int i = 0; i < numCenters; ++i){
-            System.out.println("Centers "+ centers.get(i).getCoordX() + " "+centers.get(i).getCoordY());
-        }
-
-
-        for(int i = 0; i < numSensors; ++i){
-            System.out.println("Sensors "+ sensors.get(i).getCoordX() + " "+sensors.get(i).getCoordY());
-        }*/
-
         //Initializing the size of the arrays
         connectedTo = new int[numSensors];
         inputConnections = new int[numSensors + numCenters];
@@ -142,7 +133,6 @@ public class IAState {
         int sc = 0;
         for (int i = 0; i < numSensors; ++i){
             sc += collectedDataVolume[i+numCenters];
-//            System.out.println(collectedDataVolume[i+numCenters]);
         }
         System.out.println("total data emitted: "+ sc);
         dataEmitted = sc;
@@ -160,16 +150,10 @@ public class IAState {
                 assert false;
         }
 
-        //Generate the initial solution 2
-//        generarSolucioInicial2();
-
     }
 
     //Constructor by copy
     public IAState(IAState state) {
-        //TODO: Potser s'ha de posar .clone perquè sinó faran referència al mateix array.
-        //L'Hermes have tried and it works as it says.
-        //Marc: If we don't put clone Hill Climbing ony expands 1 node.
         this.connectedTo = state.connectedTo.clone();
         this.inputConnections = state.inputConnections.clone();
         this.inputFlow = state.inputFlow.clone();
@@ -187,10 +171,6 @@ public class IAState {
     private void updateFlow(Integer s, Double capacity) {
         //TODO: int capacity = parametre.intValue(); (per evitar tantes crides a intValue()).
         // Base case, I am in a sensor.
-//        System.out.println("The capacity is: " + capacity);
-//        System.out.println("Input flow "+inputFlow[s+numCenters]);
-//        System.out.println("Nonrestricted flow "+inputFlow[s+numCenters]);
-//        System.out.println(s);
         if (s >= 0) {
             //We don't exceed our collectedDataVolume
             int previousInputFlow = inputFlow[s+numCenters];
@@ -203,7 +183,6 @@ public class IAState {
             //If there is a change in the flow
             //Marc: And we are connected to something
             if (inputFlow[s+numCenters] != previousInputFlow && connectedTo[s] != notConnected){
-//                System.out.println("Soc "+s+" i envio al "+connectedTo[s]+" que ha d'acutalitzar "+diff);
                 updateFlow(connectedTo[s], diff);
             }
         }
@@ -249,7 +228,6 @@ public class IAState {
     //For all sensor_id > 0 : connectedTo[sensor_id]=sensor_id-1. connectedTo[0]=-1 (the last datacenter).
     private void generarSolucioInicial2(){
         for(int i = numSensors-1; i >= 0; --i){
-//            System.out.println("Connectem " + i + " a "+(i-1));
             connectedTo[i] = i -1;
             inputConnections[i-1 + numCenters] += 1;
             //We send to the next sensour our collectedDataVolume + our input Flow
@@ -283,9 +261,7 @@ public class IAState {
                     connectedTo[s] = index_c;
                     this_level.add(s);
                     inputConnections[numCenters + index_c] += 1;
-                    //inputFlow[numCenters + index_c] += sensors.get(s).getCapacidad();
                     inputFlow[numCenters + index_c] += collectedDataVolume[s+numCenters];
-                    //nonRestrictedInputFlow[numCenters + index_c] += sensors.get(s).getCapacidad();
                     nonRestrictedInputFlow[numCenters + index_c] += collectedDataVolume[s+numCenters];;
                 }
                 s = volumeDistanceOrderedSensorsPerCenter.get(numCenters + index_c).poll();
@@ -315,8 +291,7 @@ public class IAState {
                         connectedTo[i] = s;
                         next_level.add(i);
                         inputConnections[s + numCenters] += 1;
-                        //updateFlow(s /*connectedTo[i] = s*/, sensors.get(i).getCapacidad());
-                        updateFlow(s /*connectedTo[i] = s*/, (double) collectedDataVolume[i+numCenters]);
+                        updateFlow(s, (double) collectedDataVolume[i+numCenters]);
                     } else {
                         available = false;
                     }
@@ -334,13 +309,10 @@ public class IAState {
         for (int i = 0; i < numSensors; ++i) {
             //Columns centers
             for (int j = 0; j < numCenters; ++j) {
-                    //System.out.print("Calculant distancia entre sensor " + i + " i centre " + j + ": ");
-                    //System.out.println(calculateDistance(sensors.get(i), centers.get(j)));
                     distances[i][j] = calculateDistance(sensors.get(i), centers.get(j));
             }
             //Column sensors
             for(int j = numCenters; j < numCenters+numSensors; ++j){
-                //System.out.println("Calculant distancia entre sensor i sensor"+ i +" " + (j-numCenters));
                 distances[i][j] = calculateDistance(sensors.get(i),sensors.get(j-numCenters));
             }
         }
@@ -353,8 +325,6 @@ public class IAState {
 
     //Calculate the distance between one sensor and one center
     private double calculateDistance(Sensor s, Centro c) {
-        //System.out.println("Sensor coord: "+ s.getCoordX() + " " + s.getCoordY());
-        //System.out.println("Center coord: "+ c.getCoordX() + " " + c.getCoordY());
         return sqrt(Math.pow((s.getCoordX() - c.getCoordX()), 2) + Math.pow((s.getCoordY() - c.getCoordY()), 2));
     }
 
@@ -375,9 +345,7 @@ public class IAState {
             Sensor s1 = sensors.get(i1);
             Sensor s2 = sensors.get(i2);
 
-            //if (s1.getCapacidad() < s2.getCapacidad()) return 1;
             if (collectedDataVolume[i1+numCenters] < collectedDataVolume[i2+numCenters]) return 1;
-            //else if (s1.getCapacidad() > s2.getCapacidad()) return -1;
             else if (collectedDataVolume[i1+numCenters] > collectedDataVolume[i2+numCenters]) return -1;
             else {
                 //Go to distance matrix and compare the distance
@@ -426,7 +394,6 @@ public class IAState {
         for (int i = 0; i < numSensors; ++i) {
             //If I'm connected to sensor_id
             if (connectedTo[i] == sensor_id) {
-//                System.out.println("-- sensor "+i+" was added");
                 depending.add(i);
                 HashSet<Integer> dependingOfI = dependingSensors(i);
                 for (Integer d: dependingOfI) {
@@ -445,9 +412,6 @@ public class IAState {
         // 2.- change destination inputConnections DONE
         // 3.- change destination and previousConnection inputFlow DONE
         // 4.- change destination collectedDataVolume
-        // +(EN PRINCIPIO YA LO DEBERIA HACER updateFlow)
-
-//        System.out.println("sensorMovingId: "+sensor_id+" destination: "+destination);
 
         int previousConnection = connectedTo[sensor_id];
 
@@ -460,30 +424,12 @@ public class IAState {
 
         inputConnections[numCenters+destination] += 1;
 
-        //Double sensorOutputFlow  = inputFlow[numCenters+sensor_id]+sensors.get(sensor_id).getCapacidad();
         Double sensorOutputFlow  = inputFlow[numCenters+sensor_id]+ (double) collectedDataVolume[sensor_id+numCenters];
-
-//        System.out.println("> sensorMovingOutputFlow: " + sensorOutputFlow);
-//
-//        System.out.println("-- Input flow previous connection before desconnection: " + inputFlow[numCenters+previousConnection]);
-//        System.out.println("-- Non Restricted Input flow previous connection before desconnection: " + nonRestrictedInputFlow[numCenters+previousConnection]);
-//
-//
-//        System.out.println("-- Input flow destination before connection: " + inputFlow[numCenters+destination]);
-//        System.out.println("-- Non Restricted Input flow destination before connection: " + nonRestrictedInputFlow[numCenters+destination]);
-//
 
         updateFlow(destination, sensorOutputFlow);
 
-//        System.out.println("------- Input flow destination after connection: " + inputFlow[numCenters+destination]);
-//        System.out.println("------- Non Restricted Input flow destination after connection: " + nonRestrictedInputFlow[numCenters+destination]);
-//
-
         updateFlow(previousConnection, -sensorOutputFlow);
-
-//        System.out.println("------- Input flow previous connection after connection: " + inputFlow[numCenters+previousConnection]);
-//        System.out.println("------- Non Restricted Input flow previous connection after connection: " + nonRestrictedInputFlow[numCenters+previousConnection]);
-    }
+}
 
     //------------------------------------2: SWAP CONNECTIONS-----------------------------------------------------------
 
@@ -497,15 +443,8 @@ public class IAState {
         }
 
         for (int i = 0; i < numSensors; ++i) {
-//            System.out.println("Catching depending sensors of sensor" + i);
-//            HashSet<Integer> dependant = dependingSensors(i);
-//            System.out.println("Depending sensors de "+ i+ ": "+ sensorDependencies.get(i).size());
-//            for (Integer d: dependant) {
-//                System.out.println(d);
-//            }
             for (int j = 0; j < numSensors; ++j) {
                 if (i != j && !sensorDependencies.get(i).contains(j) && !sensorDependencies.get(j).contains(i)) {
-//                    System.out.println("Entro en if con i: "+i+" , j: "+j);
                     ArrayList<Integer> pair = new ArrayList<>();
                     if (i < j) {
                         pair.add(i);
@@ -517,9 +456,6 @@ public class IAState {
                     }
                     pairs.add(pair);
                 }
-//                else {
-//                    System.out.println("Entro en else con i: "+i+" , j: "+j);
-//                }
             }
         }
         return new HashSet<>(pairs);
@@ -531,8 +467,6 @@ public class IAState {
         // 0.- Change both connectedTo
         // 1.- Update flow on both
 
-//        System.out.println("Sensors to be exchanged: "+sensor_id_1 + " and "+sensor_id_2);
-
         //TODO: Maybe it can be done with changeConnection()
         //Problem: If all the sensors are full we can not disconnect and then connect to the other before disconnecting
         //the other.
@@ -543,16 +477,8 @@ public class IAState {
         connectedTo[sensor_id_1] = previousConnectionSensor2;
         connectedTo[sensor_id_2] = previousConnectionSensor1;
 
-//        System.out.println("Sensor : "+sensor_id_1 + " is now connected to "+ connectedTo[sensor_id_1]);
-//        System.out.println("Sensor : "+sensor_id_2 + " is now connected to "+ connectedTo[sensor_id_2]);
-
-
-//        Sensor sensor1 = sensors.get(sensor_id_1);
-//        Sensor sensor2 = sensors.get(sensor_id_2);
-
-        //Double sensorOneOutputFlow = inputFlow[numCenters+sensor_id_1]+sensor1.getCapacidad();
         Double sensorOneOutputFlow = inputFlow[numCenters+sensor_id_1]+(double) collectedDataVolume[sensor_id_1+numCenters];
-        //Double sensorTwoOutputFlow = inputFlow[numCenters+sensor_id_2]+sensor2.getCapacidad();
+
         Double sensorTwoOutputFlow = inputFlow[numCenters+sensor_id_2]+(double) collectedDataVolume[sensor_id_2+numCenters];
 
         Double amountToUpdateOnPreviousConnectionOne = sensorTwoOutputFlow - sensorOneOutputFlow;
@@ -568,7 +494,6 @@ public class IAState {
         double sum = 0;
 
         for(int i = 0; i < numSensors; ++i) {
-//            sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + collectedDataVolume[i+numCenters]);
             sum += (int) Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (nonRestrictedInputFlow[i + numCenters] + collectedDataVolume[i+numCenters]);
         }
         return sum;
@@ -593,14 +518,9 @@ public class IAState {
         //TODO: There is a overflow problem with the double variables.
         double x = computeArrivalData();
         double y = computeCost();
-        //System.out.println("AAAAAAAAAAAAAA");
-        //System.out.println(x);
-        //System.out.println(y);
         assert x >= 0;
         assert y > 0;
         return x/y;
-        //return computeArrivalData()/computeCost();
-        //return computeCost()/computeArrivalData();
     }
 
     public double heuristicCost() {
@@ -619,16 +539,7 @@ public class IAState {
 
         //Podemos decir que perder un punto porcentual de los datos emitidos importa igual que 1000 unidades de coste (arbitrariamente)
 
-//        double Xd = arrivalData/(arrivalData+networkCost);
-//        double Xc = networkCost/(arrivalData+networkCost);
-
-//        double pesDeLesDadesSobreUn = 0.3;
-
-//        double dataPond = pesDeLesDadesSobreUn/Xd;
-//        double costPond = (1.0-pesDeLesDadesSobreUn)/Xc;
-
         double costPond = 0.1;
-//        double dataPond = 35000;
         double dataPond = 35000;
 
         return networkCost*costPond - proportionDataReceived*dataPond ; //Negativo porque minimiza
@@ -642,7 +553,6 @@ public class IAState {
         for(int i = 0; i < numSensors; ++i) {
             System.out.println("la distancia és de " +distances[i][connectedTo[i] + numCenters]+ " entre "+ i + " "+ connectedTo[i]);
             System.out.println("I el seu cost és de "+Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad()) );
-            //sum += Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + sensors.get(i).getCapacidad());
             sum += Math.pow(distances[i][connectedTo[i] + numCenters], 2) * (inputFlow[i + numCenters] + collectedDataVolume[i+numCenters]);
             System.out.println("sum = " + sum);
         }

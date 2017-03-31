@@ -16,17 +16,6 @@ public class IASuccesorFunction implements SuccessorFunction{
         // Add the states to retval as Succesor("flip i j, new state)
         // new_state has to be a copy of state
 
-//        System.out.println("··· NEW STATE EXPANDED ···");
-//        networkConf.printConnectedTo();
-//        networkConf.printFlow();
-//        networkConf.printPortionData();
-//        networkConf.printNetworkCost();
-//        networkConf.printHeuristic(1);
-//        networkConf.printHeuristic(2);
-//        networkConf.printHeuristic(3);
-
-
-
         int mode = 3;
 
         switch (mode) {
@@ -51,13 +40,11 @@ public class IASuccesorFunction implements SuccessorFunction{
             ArrayList<Integer> centers = destinations.get(0);
             ArrayList<Integer> sensors = destinations.get(1);
 
-            //System.out.println("The possible center destinations are:" + centers.size());
             for (int c = 0; c < centers.size(); ++c) {
                 IAState newState = new IAState(networkConf);
                 newState.changeConnection(i,centers.get(c)-IAState.getNumCenters());
                 retval.add(new Successor("",newState));
             }
-            //System.out.println("The possible sensor destinations are:" +sensors.size());
             for (int s = 0; s < sensors.size(); ++s) {
                 IAState newState = new IAState(networkConf);
                 newState.changeConnection(i,sensors.get(s));
@@ -70,9 +57,7 @@ public class IASuccesorFunction implements SuccessorFunction{
     private List swapConnectionsOperator(IAState networkConf) {
         ArrayList retval = new ArrayList();
         HashSet<ArrayList<Integer>> swaps = networkConf.getAllNonDependantPairsOfSensors();
-//        for (ArrayList a: swaps) {
-//            System.out.println(a.get(0)+" "+a.get(1));
-//        }
+
         for (ArrayList<Integer> swap: swaps) {
             IAState newState = new IAState(networkConf);
             newState.swapConnections(swap.get(0),swap.get(1));

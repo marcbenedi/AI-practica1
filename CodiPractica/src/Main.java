@@ -14,15 +14,18 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        int num_c = Integer.parseInt(args[0]);
+        int num_s = Integer.parseInt(args[1]);
+        int seed_c = Integer.parseInt(args[2]);
+        int seed_s = Integer.parseInt(args[3]);
+        int op_id = Integer.parseInt(args[4]);
+        int gen_id = Integer.parseInt(args[5]);
+        System.out.println("These are the arguments of the program: " + num_c + " " + num_s + " " +
+                seed_c + " " + seed_s + " " + op_id + " " + gen_id );
+
         long millis = System.currentTimeMillis();
 
-
-
         IAState myState = new IAState();
-//        myState.printState();
-
-//        System.out.println("Calling the heuristic function - FOR TESTING PURPOSES");
-//        System.out.println("The initial state heuristic value is = "+myState.heuristic1());
 
         // Create the Problem object
         Problem p = new  Problem(
@@ -33,14 +36,10 @@ public class Main {
 
         // Instantiate the search algorithm
         Search alg = new HillClimbingSearch();
+
         // Instantiate the SearchAgent object
-
-        System.out.println("Creating IAState");
-
         SearchAgent agent = new SearchAgent(p, alg);
 
-        // We print the results of the search
-//        System.out.println("We have found the best local solution");
         // You can access also to the goal state using the
         // method getGoalState of class Search
         IAState fin = (IAState) alg.getGoalState();
@@ -50,16 +49,7 @@ public class Main {
 
         System.out.println("Elapsed time: "+(m2-millis));
 
-        //printActions(agent.getActions());
         printInstrumentation(agent.getInstrumentation());
-
-//        System.out.println(fin.printTotalCostCalculation());
-
-//        fin.printConnectedTo();
-
-//        fin.printDistanceMatrix();
-
-//        fin.printInputFlow();
     }
 
     private static void printInstrumentation(Properties properties) {
