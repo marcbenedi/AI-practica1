@@ -43,21 +43,21 @@ program.append(str(initial_solution_id))
 seeds_s = [1313, 1122, 2233, 3344, 4455, 5566, 6677, 7788, 8899, 9900]
 seeds_c = [1100, 2211, 3322, 4433, 5544, 6655, 7766, 8877, 9988, 3141]
 
-listaHeurist = [[],[],[]]
-listaCoste = [[],[],[]]
-listaDatos = [[],[],[]]
+listaHeurist = [[],[]]
+listaCoste = [[],[]]
+listaDatos = [[],[]]
 
-listaMilis = [[],[],[]]
-listaExpanded= [[],[],[]]
+listaMilis = [[],[]]
+listaExpanded= [[],[]]
 
 
 for rep in range(10):
     program[5] = str(seeds_c[rep])
     program[6] = str(seeds_s[rep])
-    for op in range(1,4):
-        program[-2] = str(op)
+    for op in range(1,3):
+        program[-1] = str(op)
         output = subprocess.Popen(program, stdout=subprocess.PIPE).communicate()[0]
-        #file = open("./experiment1/"+ str(rep) + "-"+ str(op) +".out","w")
+        #file = open("./experiment2/"+ str(rep) + "-"+ str(op) +".out","w")
         #file.write(output)
         #file.close()
         #print output
@@ -70,11 +70,11 @@ for rep in range(10):
         listaExpanded[op-1].append(eval(listaCsv[-1][0]))
 
 plt.boxplot(listaHeurist)
-plt.savefig('./experiment1/heuristic.png')
+plt.savefig('./experiment2/heuristic.png')
 plt.clf()
 plt.boxplot(listaCoste)
-plt.savefig('./experiment1/coste.png')
+plt.savefig('./experiment2/coste.png')
 plt.clf()
 plt.boxplot(listaDatos)
-plt.savefig('./experiment1/datos.png')
+plt.savefig('./experiment2/datos.png')
 plt.clf()

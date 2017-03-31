@@ -21,7 +21,7 @@ public class IASuccesorFunction implements SuccessorFunction{
         // Apply the selected (mode) operator and generate new states
         // Add the states to retval as Succesor("flip i j, new state)
         // new_state has to be a copy of state
-        networkConf.printStateCSV();
+        //networkConf.printStateCSV();
 
         switch (mode) {
             case 1:

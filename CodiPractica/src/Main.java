@@ -44,7 +44,7 @@ public class Main {
         // method getGoalState of class Search
         IAState fin = (IAState) alg.getGoalState();
         //System.out.println("The heuristic (2) value for the solution state is = " + fin.heuristic2());
-
+        fin.printStateCSV();
         long m2 = System.currentTimeMillis();
 
         System.out.println((m2-millis));
