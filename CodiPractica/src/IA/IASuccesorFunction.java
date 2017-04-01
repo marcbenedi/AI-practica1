@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class IASuccesorFunction implements SuccessorFunction{
+public class IASuccesorFunction implements SuccessorFunction {
 
     private static int mode;
 
