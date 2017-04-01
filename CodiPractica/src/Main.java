@@ -27,6 +27,7 @@ public class Main {
         double lamb = Double.parseDouble(args[7]);
         int iter = Integer.parseInt(args[8]);
         int steps = Integer.parseInt(args[9]);
+        String alg_m = args[10];
         //System.out.println("These are the arguments of the program: " + num_c + " " + num_s + " " +
         //        seed_c + " " + seed_s + " " + op_id + " " + gen_id );
 
@@ -41,6 +42,16 @@ public class Main {
                 new ProbIA5GoalTest(),
                 new IAHeuristicFunction());
 
+        Search alg = null;
+
+        if(alg_m.equalsIgnoreCase("s")){
+            alg = new SimulatedAnnealingSearch(iter,steps,k,lamb);
+        }
+        else if(alg_m.equalsIgnoreCase("h")){
+            alg = new HillClimbingSearch();
+        }
+        else assert false;
+
         // Instantiate the search algorithm
         //Search alg = new HillClimbingSearch();
 
@@ -48,7 +59,8 @@ public class Main {
         // lamb = 0.01, 0.1, 0.005, 0.01
         // steps = 2244, 830, 4000, 11460
         // stiter =
-        Search alg = new SimulatedAnnealingSearch(iter,steps,k,lamb);
+
+        //Search alg = new SimulatedAnnealingSearch(iter,steps,k,lamb);
 
         // Instantiate the SearchAgent object
         SearchAgent agent = new SearchAgent(p, alg);

@@ -657,7 +657,15 @@ public class IAState {
 
     //Porcentage de datos, coste de la red, valor heuristico
     public void printStateCSV() {
-        System.out.println(getProportionDataReceived()+","+computeCost()+","+heuristic2());
+        System.out.println(getProportionDataReceived()+","+computeCost()+","+heuristic2()+","+unusedCenters());
+    }
+
+    public int unusedCenters() {
+        int cont = 0;
+        for (int i = 0; i < numCenters; ++i) {
+            if (inputConnections[i] == 0) ++cont;
+        }
+        return cont;
     }
 
 }
