@@ -22,6 +22,11 @@ public class Main {
         int seed_s = Integer.parseInt(args[3]);
         int op_id = Integer.parseInt(args[4]);
         int gen_id = Integer.parseInt(args[5]);
+
+        int k = Integer.parseInt(args[6]);
+        double lamb = Double.parseDouble(args[7]);
+        int iter = Integer.parseInt(args[8]);
+        int steps = Integer.parseInt(args[9]);
         //System.out.println("These are the arguments of the program: " + num_c + " " + num_s + " " +
         //        seed_c + " " + seed_s + " " + op_id + " " + gen_id );
 
@@ -37,13 +42,13 @@ public class Main {
                 new IAHeuristicFunction());
 
         // Instantiate the search algorithm
-        Search alg = new HillClimbingSearch();
+        //Search alg = new HillClimbingSearch();
 
         // k = 10, 5, 10,20
         // lamb = 0.01, 0.1, 0.005, 0.01
         // steps = 2244, 830, 4000, 11460
         // stiter =
-        //Search alg2 = new SimulatedAnnealingSearch();
+        Search alg = new SimulatedAnnealingSearch(iter,steps,k,lamb);
 
         // Instantiate the SearchAgent object
         SearchAgent agent = new SearchAgent(p, alg);
@@ -59,6 +64,7 @@ public class Main {
 
         printInstrumentation(agent.getInstrumentation());
     }
+
 
     private static void printInstrumentation(Properties properties) {
         //System.out.println("Instrumentation:");
