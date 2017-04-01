@@ -10,15 +10,7 @@
     <bookmark url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a7819408-29c5-48d7-aee2-4377227b899d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/IA/IASuccessorFunctionSA.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState.class" afterPath="$PROJECT_DIR$/out/production/CodiPractica/IA/IAState.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/CodiPractica/Main.class" afterPath="$PROJECT_DIR$/out/production/CodiPractica/Main.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/IA/IAState.java" afterPath="$PROJECT_DIR$/src/IA/IAState.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/IA/IASuccesorFunction.java" afterPath="$PROJECT_DIR$/src/IA/IASuccesorFunction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.java" afterPath="$PROJECT_DIR$/src/Main.java" />
-    </list>
+    <list default="true" id="a7819408-29c5-48d7-aee2-4377227b899d" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -48,7 +40,7 @@
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="307">
-              <caret line="45" column="10" lean-forward="false" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="10" />
+              <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -157,7 +149,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="1415" />
-    <option name="y" value="24" />
+    <option name="y" value="-744" />
     <option name="width" value="1317" />
     <option name="height" value="744" />
   </component>
@@ -177,9 +169,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -298,6 +289,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -755,11 +747,12 @@
       <workItem from="1490950470250" duration="3865000" />
       <workItem from="1490959851295" duration="2651000" />
       <workItem from="1491055966263" duration="33000" />
+      <workItem from="1491058242297" duration="629000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="93995000" />
+    <option name="totallyTimeSpent" value="94624000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -771,7 +764,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1415" y="24" width="1317" height="744" extended-state="6" />
+    <frame x="1415" y="-744" width="1317" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1107,7 +1100,7 @@
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="307">
-          <caret line="45" column="10" lean-forward="false" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="10" />
+          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
           <folding />
         </state>
       </provider>
