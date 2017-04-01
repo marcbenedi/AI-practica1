@@ -6,6 +6,8 @@ import aima.search.framework.Problem;
 import aima.search.framework.Search;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.HillClimbingSearch;
+import aima.search.informed.SimulatedAnnealingSearch;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -36,6 +38,12 @@ public class Main {
 
         // Instantiate the search algorithm
         Search alg = new HillClimbingSearch();
+
+        // k = 10, 5, 10,20
+        // lamb = 0.01, 0.1, 0.005, 0.01
+        // steps = 2244, 830, 4000, 11460
+        // stiter =
+        Search alg2 = new SimulatedAnnealingSearch();
 
         // Instantiate the SearchAgent object
         SearchAgent agent = new SearchAgent(p, alg);
