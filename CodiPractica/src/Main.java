@@ -43,7 +43,7 @@ public class Main {
         // lamb = 0.01, 0.1, 0.005, 0.01
         // steps = 2244, 830, 4000, 11460
         // stiter =
-        Search alg2 = new SimulatedAnnealingSearch();
+        //Search alg2 = new SimulatedAnnealingSearch();
 
         // Instantiate the SearchAgent object
         SearchAgent agent = new SearchAgent(p, alg);

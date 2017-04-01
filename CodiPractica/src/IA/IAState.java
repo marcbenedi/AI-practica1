@@ -397,7 +397,7 @@ public class IAState {
 
     //method that given a sensor_id returns
     // a set with the sensors which are connected to it directly or indirectly
-    private HashSet<Integer> dependingSensors(int sensor_id) {
+    public HashSet<Integer> dependingSensors(int sensor_id) {
         HashSet<Integer> depending = new HashSet<>();
         for (int i = 0; i < numSensors; ++i) {
             //If I'm connected to sensor_id
