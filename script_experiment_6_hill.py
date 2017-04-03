@@ -14,7 +14,7 @@ num_s = 100
 operant_id = 1
 initial_solution_id = 1
 
-alg_m = "s"
+alg_m = "h"
 
 program = []
 

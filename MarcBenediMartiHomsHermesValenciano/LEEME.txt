@@ -1,0 +1,23 @@
+Pasos para ejecutar la práctica:
+
+1.- Compilar y generar el .jar (hay ya un jar incluido en el entregable)
+
+2.- Ejecutar java -jar CodiPractica.jar <args>
+    donde
+        args = lista de argumentos para ejecutar una instancia del problema
+        args[0] = numero de centros (un entero)
+        args[1] = numero de sensores (un entero)
+        args[2] = seed para centros (un entero)
+        args[3] = seed para sensores (un entero)
+        args[4] = selector de conjunto de operadores.(un entero)  (1 -> change connection, 2 -> swap connections, 3 -> swap plus)
+        args[5] = selector de estrategia de generación de solución inicial. (un entero) (1 -> greedy, 2 -> todos en línea)
+        args[6] = parámetro k de SA (un entero)
+        args[7] = parámetro lambda de SA (un real)
+        args[8] = parámetro iter de SA (un entero)
+        args[9] = parámetro stepsPerIter (un entero)
+        args[10] = selector de algoritmo (un carácter) ( h -> HC, s -> SA)
+        args[11] = ponderación para los datos de la función heurística (un real)
+
+Ejemplo de una ejecución:
+
+  java -jar CodiPractica.jar 4 100 1234 4321 1 1 10 0.01 3000 30 h 35000

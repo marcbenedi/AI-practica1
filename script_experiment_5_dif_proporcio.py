@@ -8,7 +8,7 @@ import numpy as np
 seed_c = 1234
 seed_s = 4321
 
-num_c = 4
+num_c = 5
 num_s = 100
 
 operant_id = 1
@@ -43,55 +43,28 @@ program.append('h')
 pond = 35000
 program.append(str(pond))
 
-#Init of script
-#print("Launching experiment 1 with the next configuration:")
-#print("seed_c =", seed_c)
-#print("seed_s =", seed_s)
-#print("num_c =", num_c)
-#print("num_s =", num_s)
-#print("operant_id =", operant_id)
-#print("initial_solution_id =", initial_solution_id)
-
-#numc nums seedc seeds opid genid
-
 seeds_s = [1313, 1122, 2233, 3344, 4455, 5566, 6677, 7788, 8899, 9900]
 seeds_c = [1100, 2211, 3322, 4433, 5544, 6655, 7766, 8877, 9988, 3141]
 
-listaHeurist = [[],[],[],[]]
-listaCoste = [[],[],[],[]]
-listaDatos = [[],[],[],[]]
+listaUnusedCenters = [[],[],[],[],[],[],[],[],[],[]]
 
-listaMilis = [[],[],[],[]]
-listaExpanded= [[],[],[],[]]
-
-listaUnusedCenters = [[],[],[],[]]
-
-for rep in range(10):
+for rep in range(5):
     print 'rep',rep
     program[5] = str(seeds_c[rep])
     program[6] = str(seeds_s[rep])
-    for ite in range(4):
+    for ite in range(10):
         print ite
         program[3]=str(num_c+2*ite)
-        program[4]=str(num_s+50*ite)
         output = subprocess.Popen(program, stdout=subprocess.PIPE).communicate()[0]
-        #file = open("./experiment2/"+ str(rep) + "-"+ str(op) +".out","w")
-        #file.write(output)
-        #file.close()
-        #print output
         reader = csv.reader(output.splitlines())
         listaCsv = list(reader)
         listaUnusedCenters[ite].append(eval(listaCsv[-3][3]))
-        listaHeurist[ite].append(eval(listaCsv[-3][2]))
-        listaCoste[ite].append(eval(listaCsv[-3][1]))
-        listaDatos[ite].append(eval(listaCsv[-3][0]))
-        listaMilis[ite].append(eval(listaCsv[-2][0]))
-        listaExpanded[ite].append(eval(listaCsv[-1][0]))
 
-plt.boxplot(listaUnusedCenters)
 plt.autoscale()
+plt.boxplot(listaUnusedCenters)
 plt.suptitle('Centros no usados')
-plt.xlabel('Diferentes escalas')
+plt.xlabel('#Centros en la red')
+plt.xticks([1,2,3,4,5,6,7,8,9,10],[str(i) for i in range(5,200)])
 plt.ylabel('#Centros inutilizados')
-plt.savefig('./experiment5/centrosInutilizadosScale.png',bbox_inches='tight')
+plt.savefig('./experiment5/centrosInutilizadosDifProporcio.png',bbox_inches='tight')
 plt.clf()

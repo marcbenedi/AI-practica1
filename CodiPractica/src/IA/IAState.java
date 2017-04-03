@@ -650,7 +650,7 @@ public class IAState {
     }
 
     public void printPortionData() {
-        System.out.println("Portion data collected: "+ getProportionDataReceived());
+        System.out.println(getProportionDataReceived());
     }
 
     public void printNetworkCost() {

@@ -70,12 +70,16 @@ public class Main {
         // method getGoalState of class Search
         IAState fin = (IAState) alg.getGoalState();
         //System.out.println("The heuristic (2) value for the solution state is = " + fin.heuristic2());
-        fin.printStateCSV();
+        //fin.printStateCSV();
         long m2 = System.currentTimeMillis();
 
-        System.out.println((m2-millis));
+        System.out.println("El tiempo de ejecución ha sido de = "+(m2-millis) +" ms");
+        System.out.print("El coste de la red es de ");
+        fin.printNetworkCost();
+        System.out.print("El porcentage de datos que llegan es de ");
+        fin.printPortionData();
 
-        printInstrumentation(agent.getInstrumentation());
+        //printInstrumentation(agent.getInstrumentation());
     }
 
 
