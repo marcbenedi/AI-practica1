@@ -23,7 +23,7 @@ public class IAState {
     private static final int inputMaxSensor = 3;
     private static int notConnected;
 
-
+    private static double pond_data;
     private static int modeGenerationInitial;
     //------------------------------------------------------------------------------------------------------------------
 
@@ -96,7 +96,7 @@ public class IAState {
     }
 
     /* Constructor */
-    public IAState(int num_c, int num_s, int seed_c, int seed_s, int gen_id) {
+    public IAState(int num_c, int num_s, int seed_c, int seed_s, int gen_id, double pond) {
 
         //Setting constants
         numCenters = num_c;
@@ -105,6 +105,7 @@ public class IAState {
         this.seed_s = seed_s;
         modeGenerationInitial = gen_id;
         notConnected = -num_c-1;
+        pond_data = pond;
 
         //Initializing the problem with IA.Red input
         //Create the CentroDatos ArrayList with a random seed.
@@ -548,7 +549,8 @@ public class IAState {
         //Podemos decir que perder un punto porcentual de los datos emitidos importa igual que 1000 unidades de coste (arbitrariamente)
 
         double costPond = 0.1;
-        double dataPond = 35000;
+        //double dataPond = 35000;
+        double dataPond = pond_data;
 
         return networkCost*costPond - proportionDataReceived*dataPond ; //Negativo porque minimiza
     }

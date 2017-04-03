@@ -28,12 +28,13 @@ public class Main {
         int iter = Integer.parseInt(args[8]);
         int steps = Integer.parseInt(args[9]);
         String alg_m = args[10];
+        double pond = Double.parseDouble(args[11]);
         //System.out.println("These are the arguments of the program: " + num_c + " " + num_s + " " +
         //        seed_c + " " + seed_s + " " + op_id + " " + gen_id );
 
         long millis = System.currentTimeMillis();
 
-        IAState myState = new IAState(num_c,num_s,seed_c,seed_s,gen_id);
+        IAState myState = new IAState(num_c,num_s,seed_c,seed_s,gen_id,pond);
 
         // Create the Problem object
         Problem p = new  Problem(
